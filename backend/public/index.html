@@ -487,17 +487,24 @@
     <!-- ======================================================== -->
     <!-- VIEW 1: DASHBOARD (AUTHENTIC GOOGLE MEET ENTERPRISE)      -->
     <!-- ======================================================== -->
-    <div id="view-dashboard" class="max-w-7xl w-full mx-auto px-4 sm:px-8 lg:px-12 py-8 sm:py-14 flex-1 overflow-y-auto">
+    <div id="view-dashboard" class="max-w-7xl w-full mx-auto px-4 sm:px-8 lg:px-12 py-8 sm:py-12 flex-1 overflow-y-auto">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
 
         <!-- Left Column: Google Meet Headline & Actions -->
-        <div class="lg:col-span-7 space-y-8">
+        <div class="lg:col-span-7 space-y-7">
+          
+          <!-- Trust & Status Badge -->
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-[#303134] border border-blue-200/80 dark:border-[#3c4043] text-xs font-medium text-[#1a73e8] dark:text-[#8ab4f8] shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-[#1a73e8] animate-pulse"></span>
+            <span>Plateforme de Visioconférence Sécurisée • Prête à l'emploi</span>
+          </div>
+
           <div class="space-y-4">
             <h1 class="text-3xl sm:text-4xl lg:text-[46px] font-normal tracking-tight text-slate-900 dark:text-gray-100 leading-[1.18]">
               Des visioconférences de qualité professionnelle pour tous.
             </h1>
             <p class="text-base sm:text-lg text-slate-600 dark:text-gray-400 leading-relaxed font-normal max-w-xl">
-              Connectez-vous, collaborez et célébrez les moments importants où que vous soyez en toute sécurité avec JT-Meet.
+              Connectez-vous, partagez votre écran et collaborez en direct avec vos équipes, partenaires ou clients, en toute fluidité avec JT-Meet.
             </p>
           </div>
 
@@ -647,7 +654,7 @@
 
           <!-- Collapsible Recent Meetings & Clips Drawer/Button -->
           <div class="w-full max-w-md pt-2">
-            <button onclick="toggleRecentDrawer()" class="w-full py-2.5 px-4 rounded-xl border border-slate-200 dark:border-[#3c4043] hover:bg-slate-50 dark:hover:bg-[#303134] text-xs font-medium text-slate-600 dark:text-gray-300 flex items-center justify-between transition">
+            <button onclick="toggleRecentDrawer()" class="w-full py-2.5 px-4 rounded-xl border border-slate-200 dark:border-[#3c4043] hover:bg-slate-50 dark:hover:bg-[#303134] text-xs font-medium text-slate-600 dark:text-gray-300 flex items-center justify-between transition shadow-xs">
               <span class="flex items-center gap-2">
                 <i class="fa-solid fa-clock-rotate-left text-[#1a73e8]"></i>
                 <span>Vos réunions récentes & extraits (<span id="meetings-count">0</span>)</span>
@@ -655,7 +662,7 @@
               <i id="recent-drawer-chevron" class="fa-solid fa-chevron-down text-xs transition-transform"></i>
             </button>
 
-            <div id="recent-drawer-content" class="hidden mt-3 bg-white dark:bg-[#303134] rounded-2xl border border-slate-200 dark:border-[#3c4043] shadow-sm overflow-hidden text-left">
+            <div id="recent-drawer-content" class="hidden mt-3 bg-white dark:bg-[#303134] rounded-2xl border border-slate-200 dark:border-[#3c4043] shadow-md overflow-hidden text-left">
               <!-- Tab Headers -->
               <div class="flex border-b border-slate-200 dark:border-[#3c4043] bg-slate-50/60 dark:bg-[#282a2d]">
                 <button id="tab-btn-meetings" onclick="switchDashboardTab('meetings')" class="flex-1 py-3 px-4 text-xs font-medium text-[#1a73e8] border-b-2 border-[#1a73e8] text-center transition">
@@ -692,37 +699,50 @@
 
       <!-- Professional Features Cards Section -->
       <div class="mt-14 pt-10 border-t border-slate-200 dark:border-[#3c4043] grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="p-5 rounded-2xl bg-white dark:bg-[#303134] border border-slate-200/80 dark:border-[#3c4043] space-y-2.5 transition hover:shadow-md">
-          <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/40 text-[#1a73e8] dark:text-[#8ab4f8] flex items-center justify-center text-lg">
+        <div class="p-6 rounded-2xl bg-white dark:bg-[#303134] border border-slate-200/90 dark:border-[#3c4043] space-y-3 transition hover:shadow-md">
+          <div class="w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-900/40 text-[#1a73e8] dark:text-[#8ab4f8] flex items-center justify-center text-lg">
             <i class="fa-solid fa-bolt"></i>
           </div>
-          <h4 class="font-medium text-sm text-slate-900 dark:text-gray-100">Démarrage instantané</h4>
-          <p class="text-xs text-slate-600 dark:text-gray-400 leading-relaxed font-normal">
+          <h4 class="font-medium text-base text-slate-900 dark:text-gray-100">Démarrage instantané</h4>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-gray-400 leading-relaxed font-normal">
             Lancez un appel en 1 clic sans inscription obligatoire. Partagez votre code 3-4-3 pour inviter vos collègues en quelques secondes.
           </p>
         </div>
 
-        <div class="p-5 rounded-2xl bg-white dark:bg-[#303134] border border-slate-200/80 dark:border-[#3c4043] space-y-2.5 transition hover:shadow-md">
-          <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/40 text-[#1e8e3e] dark:text-emerald-400 flex items-center justify-center text-lg">
+        <div class="p-6 rounded-2xl bg-white dark:bg-[#303134] border border-slate-200/90 dark:border-[#3c4043] space-y-3 transition hover:shadow-md">
+          <div class="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-900/40 text-[#1e8e3e] dark:text-emerald-400 flex items-center justify-center text-lg">
             <i class="fa-solid fa-shield-halved"></i>
           </div>
-          <h4 class="font-medium text-sm text-slate-900 dark:text-gray-100">Sécurité & Confidentialité</h4>
-          <p class="text-xs text-slate-600 dark:text-gray-400 leading-relaxed font-normal">
+          <h4 class="font-medium text-base text-slate-900 dark:text-gray-100">Sécurité & Confidentialité</h4>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-gray-400 leading-relaxed font-normal">
             Toutes les réunions sont sécurisées avec un chiffrement WebRTC de bout en bout et un contrôle d'accès d'organisateur strict.
           </p>
         </div>
 
-        <div class="p-5 rounded-2xl bg-white dark:bg-[#303134] border border-slate-200/80 dark:border-[#3c4043] space-y-2.5 transition hover:shadow-md">
-          <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg">
+        <div class="p-6 rounded-2xl bg-white dark:bg-[#303134] border border-slate-200/90 dark:border-[#3c4043] space-y-3 transition hover:shadow-md">
+          <div class="w-11 h-11 rounded-xl bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
           </div>
-          <h4 class="font-medium text-sm text-slate-900 dark:text-gray-100">Collaboration complète</h4>
-          <p class="text-xs text-slate-600 dark:text-gray-400 leading-relaxed font-normal">
+          <h4 class="font-medium text-base text-slate-900 dark:text-gray-100">Collaboration complète</h4>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-gray-400 leading-relaxed font-normal">
             Partage d'écran HD, sous-titres en direct [CC], tableau blanc collaboratif, éditeur de code et réactions emojis en temps réel.
           </p>
         </div>
       </div>
-    </div>
+
+      <!-- Professional Landing Footer -->
+      <footer class="mt-14 pt-8 pb-4 border-t border-slate-200 dark:border-[#3c4043] flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-gray-400 gap-4 select-none">
+        <div class="flex items-center gap-2">
+          <span class="font-medium text-slate-700 dark:text-gray-300">JT-Meet</span>
+          <span>•</span>
+          <span>Plateforme professionnelle de communication vidéo</span>
+        </div>
+        <div class="flex items-center gap-5 flex-wrap justify-center">
+          <button onclick="openHelpModal()" class="hover:text-[#1a73e8] dark:hover:text-[#8ab4f8] transition">Aide & Raccourcis</button>
+          <button onclick="openFeedbackModal()" class="hover:text-[#1a73e8] dark:hover:text-[#8ab4f8] transition">Commentaires</button>
+          <a href="https://jt-verse.vercel.app/projects/jt-meet-video-conferencing-platform" target="_blank" rel="noopener noreferrer" class="hover:text-[#1a73e8] dark:hover:text-[#8ab4f8] transition">À propos de JT-Verse</a>
+        </div>
+      </footer>
     </div>
 
     <!-- ======================================================== -->
