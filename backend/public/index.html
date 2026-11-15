@@ -461,13 +461,6 @@
         <i class="fa-solid fa-gear text-base sm:text-lg"></i>
       </button>
 
-      <!-- Theme Toggle Button (Light / Dark) -->
-      <button id="theme-toggle-btn" onclick="toggleTheme()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-300 flex items-center justify-center transition" title="Basculer Mode Clair / Sombre">
-        <i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-500 text-base sm:text-lg"></i>
-      </button>
-        <i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-500 text-lg"></i>
-      </button>
-
       <!-- User Profile Badge -->
       <div id="user-badge" class="hidden items-center gap-2.5 bg-slate-100 dark:bg-[#303134] pl-2 pr-3 py-1.5 rounded-full border border-slate-300 dark:border-[#3c4043] text-xs sm:text-sm">
         <div class="w-7 h-7 rounded-full bg-[#1a73e8] text-white font-bold flex items-center justify-center text-xs" id="user-avatar">U</div>
@@ -767,11 +760,16 @@
             
             <!-- Local participant card -->
             <div class="relative bg-[#3c4043] rounded-xl sm:rounded-2xl overflow-hidden border border-white/[0.08] shadow-lg flex items-center justify-center w-full h-full min-h-0 min-w-0 transition-all duration-300 group" id="local-video-card">
-              <video id="local-video" autoplay muted playsinline class="w-full h-full object-cover"></video>
+              <video id="local-video" autoplay muted playsinline class="w-full h-full object-cover transform -scale-x-100"></video>
               <div id="local-video-avatar" class="hidden w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#1a73e8] text-white text-3xl sm:text-4xl font-medium items-center justify-center shadow-md">
                 U
               </div>
               
+              <!-- Pin Button (Hover) -->
+              <button onclick="pinParticipant('local')" class="opacity-0 group-hover:opacity-100 transition-opacity absolute top-3 right-3 w-8 h-8 rounded-full bg-[#202124]/80 hover:bg-[#3c4043] text-white flex items-center justify-center text-xs shadow-md" title="Épingler">
+                <i class="fa-solid fa-thumbtack"></i>
+              </button>
+
               <!-- Bottom Name Pill -->
               <div class="absolute bottom-3 left-3 flex items-center gap-2 bg-[#202124]/85 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 text-xs shadow-md">
                 <span id="local-user-name" class="font-medium text-white truncate max-w-[140px]">Vous</span>
@@ -784,6 +782,13 @@
             </div>
 
           </div>
+        </div>
+
+        <!-- Google Meet Speaking while muted alert -->
+        <div id="muted-speaking-alert" class="hidden absolute bottom-24 left-1/2 -translate-x-1/2 z-50 bg-[#202124] border border-[#5f6368] text-white px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-3 text-xs sm:text-sm transition-all pointer-events-auto">
+          <i class="fa-solid fa-microphone-slash text-[#ea4335] text-base"></i>
+          <span>Votre micro est coupé.</span>
+          <button onclick="toggleAudio()" class="text-[#8ab4f8] hover:underline font-semibold ml-1">Réactiver</button>
         </div>
 
         <!-- Google Meet Live Closed Captions (Sous-titres en direct) -->
@@ -1163,28 +1168,6 @@
 
           <!-- Host Controls Button -->
           <button id="btn-host-controls" onclick="toggleHostControls()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-[#3c4043] text-gray-300 hover:text-white flex items-center justify-center text-sm sm:text-base transition" title="Commandes de l'organisateur">
-            <i class="fa-solid fa-shield-halved"></i>
-          </button>
-        </div>
-          <!-- Meeting Information Pill -->
-          <button onclick="openInvitationModal()" class="w-10 h-10 rounded-full hover:bg-[#3c4043] text-gray-300 hover:text-white flex items-center justify-center text-base transition" title="Détails de la réunion">
-            <i class="fa-solid fa-circle-info"></i>
-          </button>
-
-          <!-- Participants Button -->
-          <button onclick="toggleParticipants()" class="relative w-10 h-10 rounded-full hover:bg-[#3c4043] text-gray-300 hover:text-white flex items-center justify-center text-base transition" title="Afficher tous les participants">
-            <i class="fa-solid fa-user-group"></i>
-            <span id="participants-count-badge" class="absolute -top-1 -right-1 bg-[#1a73e8] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full min-w-[18px] text-center">1</span>
-          </button>
-
-          <!-- Chat Button -->
-          <button onclick="toggleChat()" class="relative w-10 h-10 rounded-full hover:bg-[#3c4043] text-gray-300 hover:text-white flex items-center justify-center text-base transition" title="Discuter avec les participants">
-            <i class="fa-regular fa-message"></i>
-            <span id="chat-unread-dot" class="hidden absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#1a73e8] animate-ping"></span>
-          </button>
-
-          <!-- Host Controls Button -->
-          <button id="btn-host-controls" onclick="toggleHostControls()" class="w-10 h-10 rounded-full hover:bg-[#3c4043] text-gray-300 hover:text-white flex items-center justify-center text-base transition" title="Commandes de l'organisateur">
             <i class="fa-solid fa-shield-halved"></i>
           </button>
         </div>
@@ -1917,9 +1900,22 @@
         socket.on('user-media-toggled', ({ socketId, isAudioMuted, isVideoOff }) => {
           const u = connectedUsers.get(socketId);
           if (u) {
-            u.isAudioMuted = isAudioMuted;
-            u.isVideoOff = isVideoOff;
+            if (isAudioMuted !== undefined) u.isAudioMuted = isAudioMuted;
+            if (isVideoOff !== undefined) u.isVideoOff = isVideoOff;
             renderParticipantsList();
+          }
+          const peerVid = document.getElementById(`peer-vid-${socketId}`);
+          const peerAvatar = document.getElementById(`peer-avatar-${socketId}`);
+          const peerMute = document.getElementById(`peer-mute-${socketId}`);
+          if (isVideoOff !== undefined && peerVid && peerAvatar) {
+            peerVid.classList.toggle('hidden', isVideoOff);
+            peerAvatar.classList.toggle('hidden', !isVideoOff);
+            peerAvatar.classList.toggle('flex', isVideoOff);
+          }
+          if (isAudioMuted !== undefined && peerMute) {
+            peerMute.innerHTML = isAudioMuted
+              ? '<i class="fa-solid fa-microphone-slash text-red-400"></i>'
+              : '<i class="fa-solid fa-microphone text-emerald-400"></i>';
           }
         });
 
@@ -1942,6 +1938,8 @@
             u.handRaised = handRaised;
             renderParticipantsList();
           }
+          const peerHand = document.getElementById(`peer-hand-${socketId}`);
+          if (peerHand) peerHand.classList.toggle('hidden', !handRaised);
           if (handRaised) showToast(`✋ ${userName} a levé la main !`, 'info');
         });
 
@@ -2391,6 +2389,18 @@
             if (localInd) localInd.classList.toggle('hidden', !isSpeaking);
           }
 
+          // Google Meet "Votre micro est coupé" alert when speaking while muted
+          if (avg > 34 && isAudioMuted) {
+            const mutedAlert = document.getElementById('muted-speaking-alert');
+            if (mutedAlert) {
+              mutedAlert.classList.remove('hidden');
+              clearTimeout(window._muteAlertTimer);
+              window._muteAlertTimer = setTimeout(() => {
+                mutedAlert.classList.add('hidden');
+              }, 3500);
+            }
+          }
+
           audioMeterAnimId = requestAnimationFrame(checkAudio);
         };
         checkAudio();
@@ -2617,6 +2627,40 @@
       return createPeerConnection(remoteSocketId, userName, false);
     }
 
+    const peerAudioAnalysers = new Map();
+    function setupPeerAudioAnalyser(socketId, stream) {
+      try {
+        if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        if (peerAudioAnalysers.has(socketId)) return;
+        const source = audioContext.createMediaStreamSource(stream);
+        const analyser = audioContext.createAnalyser();
+        analyser.fftSize = 64;
+        source.connect(analyser);
+        const data = new Uint8Array(analyser.frequencyBinCount);
+        let animId = null;
+        const poll = () => {
+          if (!activePeers.has(socketId)) {
+            cancelAnimationFrame(animId);
+            return;
+          }
+          analyser.getByteFrequencyData(data);
+          let sum = 0;
+          for (let i = 0; i < data.length; i++) sum += data[i];
+          const avg = sum / data.length;
+          const card = document.getElementById(`peer-card-${socketId}`);
+          const ind = document.getElementById(`peer-speaking-${socketId}`);
+          const isSpeaking = avg > 30;
+          if (card) card.classList.toggle('active-speaker-halo', isSpeaking);
+          if (ind) ind.classList.toggle('hidden', !isSpeaking);
+          animId = requestAnimationFrame(poll);
+        };
+        poll();
+        peerAudioAnalysers.set(socketId, { source, analyser, animId });
+      } catch (e) {
+        console.warn('Peer audio analyser error:', e.message);
+      }
+    }
+
     function addOrUpdatePeerVideo(socketId, userName, stream) {
       const grid = document.getElementById('video-grid');
       let card = document.getElementById(`peer-card-${socketId}`);
@@ -2624,16 +2668,27 @@
       if (!card) {
         card = document.createElement('div');
         card.id = `peer-card-${socketId}`;
-        card.className = "relative bg-[#3c4043] rounded-xl sm:rounded-2xl overflow-hidden border border-white/[0.08] shadow-lg flex items-center justify-center w-full h-full min-h-0 min-w-0 transition-all duration-200 group";
+        card.className = "relative bg-[#3c4043] rounded-xl sm:rounded-2xl overflow-hidden border border-white/[0.08] shadow-lg flex items-center justify-center w-full h-full min-h-0 min-w-0 transition-all duration-300 group";
         card.innerHTML = `
           <video id="peer-vid-${socketId}" autoplay playsinline class="w-full h-full object-cover"></video>
           <div id="peer-avatar-${socketId}" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#1a73e8] text-white text-3xl sm:text-4xl font-medium flex items-center justify-center shadow-md">
             ${escapeHtml((userName || 'U').charAt(0).toUpperCase())}
           </div>
+          
+          <!-- Pin Button (Hover) -->
+          <button onclick="pinParticipant('${socketId}')" class="opacity-0 group-hover:opacity-100 transition-opacity absolute top-3 right-3 w-8 h-8 rounded-full bg-[#202124]/80 hover:bg-[#3c4043] text-white flex items-center justify-center text-xs shadow-md" title="Épingler">
+            <i class="fa-solid fa-thumbtack"></i>
+          </button>
+
+          <!-- Bottom Name Pill -->
           <div class="absolute bottom-3 left-3 flex items-center gap-2 bg-[#202124]/85 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 text-xs shadow-md">
             <span class="font-medium text-white truncate max-w-[140px]">${escapeHtml(userName || 'Participant')}</span>
             <span id="peer-mute-${socketId}" class="text-emerald-400"><i class="fa-solid fa-microphone"></i></span>
+            <span id="peer-speaking-${socketId}" class="hidden text-[#8ab4f8] animate-pulse text-[11px]"><i class="fa-solid fa-waveform"></i></span>
           </div>
+
+          <!-- Hand Raised -->
+          <div id="peer-hand-${socketId}" class="hidden absolute top-3 left-3 text-2xl animate-bounce">✋</div>
         `;
         grid.appendChild(card);
       }
@@ -2645,11 +2700,19 @@
           vid.srcObject = stream;
           if (avatar) avatar.classList.add('hidden');
         }
+        if (stream.getAudioTracks().length > 0) {
+          setupPeerAudioAnalyser(socketId, stream);
+        }
       }
       updateVideoGridLayout();
     }
 
     function removePeer(socketId) {
+      if (peerAudioAnalysers.has(socketId)) {
+        const item = peerAudioAnalysers.get(socketId);
+        if (item.animId) cancelAnimationFrame(item.animId);
+        peerAudioAnalysers.delete(socketId);
+      }
       const pc = activePeers.get(socketId);
       if (pc) {
         pc.close();
@@ -2658,6 +2721,7 @@
       remoteStreams.delete(socketId);
       const card = document.getElementById(`peer-card-${socketId}`);
       if (card) card.remove();
+      if (pinnedPeerSocketId === socketId) pinnedPeerSocketId = null;
       updateVideoGridLayout();
     }
 
@@ -2674,7 +2738,30 @@
       if (c2) c2.textContent = count;
       if (c3) c3.textContent = count;
 
-      grid.className = "w-full h-full max-h-full grid gap-2 sm:gap-4 items-center justify-center transition-all duration-200 min-h-0 min-w-0";
+      // Handle Pinned participant spotlight mode
+      if (pinnedPeerSocketId) {
+        grid.className = "w-full h-full max-h-full grid grid-cols-1 md:grid-cols-4 gap-2 sm:gap-4 items-center justify-center transition-all duration-300 min-h-0 min-w-0";
+        const allCards = grid.children;
+        for (let i = 0; i < allCards.length; i++) {
+          const c = allCards[i];
+          const isPinned = (pinnedPeerSocketId === 'local' && c.id === 'local-video-card') ||
+                           (c.id === `peer-card-${pinnedPeerSocketId}`);
+          if (isPinned) {
+            c.className = "relative bg-[#3c4043] rounded-xl sm:rounded-2xl overflow-hidden border-2 border-[#1a73e8] shadow-2xl flex items-center justify-center w-full h-full min-h-0 min-w-0 md:col-span-3 transition-all duration-300 group";
+          } else {
+            c.className = "relative bg-[#3c4043] rounded-xl sm:rounded-2xl overflow-hidden border border-white/[0.08] shadow-lg flex items-center justify-center w-full h-32 sm:h-44 md:h-full min-h-0 min-w-0 md:col-span-1 transition-all duration-300 group";
+          }
+        }
+        return;
+      }
+
+      // Default layout without pin
+      const allCards = grid.children;
+      for (let i = 0; i < allCards.length; i++) {
+        allCards[i].className = "relative bg-[#3c4043] rounded-xl sm:rounded-2xl overflow-hidden border border-white/[0.08] shadow-lg flex items-center justify-center w-full h-full min-h-0 min-w-0 transition-all duration-300 group";
+      }
+
+      grid.className = "w-full h-full max-h-full grid gap-2 sm:gap-4 items-center justify-center transition-all duration-300 min-h-0 min-w-0";
 
       if (count === 1) {
         grid.classList.add("grid-cols-1", "max-w-5xl", "mx-auto");
@@ -3101,6 +3188,59 @@
       return currentUser;
     }
 
+    async function startDirectMeeting(code) {
+      currentRoomCode = code;
+      window.history.replaceState({}, '', '/' + code);
+      switchView('room');
+      updateRoomClock();
+
+      ensureUser();
+      const chosenName = (currentUser && currentUser.name) ? currentUser.name : 'Participant';
+      const localNameEl = document.getElementById('local-user-name');
+      if (localNameEl) localNameEl.textContent = chosenName + ' (Vous)';
+      const badge = document.getElementById('room-code-badge');
+      if (badge) badge.textContent = currentRoomCode;
+      const roomCodeDisp = document.getElementById('room-code-display');
+      if (roomCodeDisp) roomCodeDisp.textContent = currentRoomCode;
+      lastRoomJoined = currentRoomCode;
+
+      // Show Google Meet "Votre réunion est prête" floating dialog
+      const meetUrl = `${window.location.origin}/${currentRoomCode}`;
+      const readyUrlEl = document.getElementById('meeting-ready-url');
+      if (readyUrlEl) readyUrlEl.textContent = meetUrl;
+      const readyCard = document.getElementById('meeting-ready-card');
+      if (readyCard) readyCard.classList.remove('hidden');
+
+      // Initialize media directly in parallel
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({
+          video: { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+        });
+      } catch (err1) {
+        try {
+          localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        } catch (err2) {
+          console.warn('Media hardware unavailable, synthetic stream fallback', err2.message);
+          localStream = createSyntheticMediaStream(chosenName);
+        }
+      }
+
+      const localVid = document.getElementById('local-video');
+      if (localVid && localStream) localVid.srcObject = localStream;
+      setupAudioDSP(localStream);
+      populateMediaDevices();
+
+      if (socket) {
+        socket.emit('join-room', {
+          roomId: currentRoomCode,
+          userId: currentUser ? currentUser.id : `guest-${Date.now()}`,
+          userName: chosenName
+        });
+      }
+      updateVideoGridLayout();
+    }
+
     async function createMeeting() {
       const menu = document.getElementById('new-meeting-menu');
       if (menu) menu.classList.add('hidden');
@@ -3124,7 +3264,7 @@
       }
 
       if (!code) code = generateClientGoogleMeetCode();
-      prepareMeetingInGreenRoom(code);
+      startDirectMeeting(code);
     }
 
     async function createMeetingLater() {
@@ -4190,6 +4330,46 @@
     function escapeHtml(str) {
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
+
+    // Google Meet Authentic Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || (e.target && e.target.isContentEditable)) return;
+
+      const isRoomVisible = !document.getElementById('view-room')?.classList.contains('hidden');
+      if (!isRoomVisible) return;
+
+      // Ctrl+D or Cmd+D: Mute / Unmute Audio
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'd' || e.key === 'D')) {
+        e.preventDefault();
+        toggleAudio();
+        return;
+      }
+
+      // Ctrl+E or Cmd+E: Turn Camera On / Off
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'e' || e.key === 'E')) {
+        e.preventDefault();
+        toggleVideo();
+        return;
+      }
+
+      // Ctrl+H or Cmd+H: Raise / Lower Hand
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'h' || e.key === 'H')) {
+        e.preventDefault();
+        toggleHand();
+        return;
+      }
+
+      // Ctrl+C or Cmd+C (when no text is selected): Toggle Closed Captions
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C')) {
+        const selection = window.getSelection ? window.getSelection().toString() : '';
+        if (!selection) {
+          e.preventDefault();
+          toggleClosedCaptions();
+          return;
+        }
+      }
+    });
   </script>
 </body>
 </html>
