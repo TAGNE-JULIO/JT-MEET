@@ -400,11 +400,17 @@
   <!-- TOP GOOGLE MEET STYLE HEADER -->
   <header class="sticky top-0 z-40 px-4 sm:px-8 py-3 flex items-center justify-between border-b border-slate-200 dark:border-[#3c4043] bg-white dark:bg-[#202124]">
     <div class="flex items-center gap-3 cursor-pointer select-none" onclick="switchView('dashboard')">
-      <div class="w-10 h-10 rounded-xl bg-[#1a73e8] flex items-center justify-center shadow-sm">
-        <i class="fa-solid fa-video text-white text-lg"></i>
-      </div>
-      <div>
-        <span class="text-xl font-semibold tracking-tight text-slate-800 dark:text-gray-100">JT-Meet</span>
+      <!-- Authentic Google Meet Multi-Color Camera Logo -->
+      <svg class="w-9 h-9 flex-shrink-0" viewBox="0 0 87.5 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M48.5 36L64.5 48.5V23.5L48.5 36Z" fill="#EA4335"/>
+        <path d="M0 53.5C0 60.1274 5.37258 65.5 12 65.5H48.5V44.5L0 44.5V53.5Z" fill="#34A853"/>
+        <path d="M48.5 6.5H12C5.37258 6.5 0 11.8726 0 18.5V27.5L48.5 27.5V6.5Z" fill="#4285F4"/>
+        <path d="M0 27.5H48.5V44.5H0V27.5Z" fill="#FBBC04"/>
+        <path d="M64.5 23.5L81 10.5C84.5 7.5 87.5 10 87.5 14.5V57.5C87.5 62 84.5 64.5 81 61.5L64.5 48.5V23.5Z" fill="#4285F4"/>
+      </svg>
+      <div class="flex items-center gap-1.5">
+        <span class="text-xl font-medium tracking-tight text-slate-800 dark:text-gray-100">JT</span>
+        <span class="text-xl font-normal text-slate-600 dark:text-gray-300">Meet</span>
       </div>
     </div>
 
@@ -527,39 +533,106 @@
           </div>
         </div>
 
-        <!-- Right Column: Clean Tabbed Card (Recent Meetings & Clips) -->
-        <div class="lg:col-span-5">
-          <div class="bg-white dark:bg-[#303134] rounded-2xl border border-slate-200 dark:border-[#3c4043] shadow-sm overflow-hidden">
-            <!-- Tab Headers -->
-            <div class="flex border-b border-slate-200 dark:border-[#3c4043] bg-slate-50/60 dark:bg-[#282a2d]">
-              <button id="tab-btn-meetings" onclick="switchDashboardTab('meetings')" class="flex-1 py-3.5 px-4 text-xs sm:text-sm font-medium text-[#1a73e8] border-b-2 border-[#1a73e8] text-center transition">
-                Réunions (<span id="meetings-count">0</span>)
-              </button>
-              <button id="tab-btn-clips" onclick="switchDashboardTab('clips')" class="flex-1 py-3.5 px-4 text-xs sm:text-sm font-medium text-slate-500 dark:text-gray-400 hover:text-slate-800 dark:hover:text-gray-200 text-center transition">
-                Extraits (<span id="clips-count">0</span>)
-              </button>
-            </div>
-
-            <!-- Tab 1: Meetings List -->
-            <div id="tab-content-meetings" class="p-4 space-y-3 min-h-[300px] max-h-[420px] overflow-y-auto">
-              <div id="meetings-list" class="space-y-2 text-xs sm:text-sm">
-                <div class="text-center py-16 text-slate-400 dark:text-gray-500 font-normal">
-                  <i class="fa-regular fa-calendar-check text-4xl mb-3 block opacity-40"></i>
-                  Aucune réunion récente.<br>Cliquez sur "Nouvelle réunion" pour démarrer.
+        <!-- Right Column: Authentic Google Meet Carousel & Recent Activity -->
+        <div class="lg:col-span-5 flex flex-col items-center justify-center space-y-6 text-center">
+          
+          <!-- Carousel Card -->
+          <div class="w-full flex flex-col items-center space-y-6">
+            <!-- Circular Illustration Area -->
+            <div class="relative w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-blue-50 dark:bg-[#303134] border border-blue-100 dark:border-[#3c4043] flex items-center justify-center shadow-inner overflow-hidden transition-all">
+              <div id="carousel-img-0" class="carousel-slide flex flex-col items-center justify-center space-y-3">
+                <div class="w-20 h-20 rounded-2xl bg-[#1a73e8] text-white flex items-center justify-center shadow-lg text-3xl">
+                  <i class="fa-solid fa-link"></i>
+                </div>
+                <div class="flex items-center gap-1.5 text-xs text-[#1a73e8] font-medium bg-blue-100/70 dark:bg-blue-900/40 px-3 py-1 rounded-full">
+                  <i class="fa-solid fa-lock text-[10px]"></i> Lien sécurisé
+                </div>
+              </div>
+              <div id="carousel-img-1" class="carousel-slide hidden flex flex-col items-center justify-center space-y-3">
+                <div class="w-20 h-20 rounded-2xl bg-[#1e8e3e] text-white flex items-center justify-center shadow-lg text-3xl">
+                  <i class="fa-regular fa-calendar-check"></i>
+                </div>
+                <div class="flex items-center gap-1.5 text-xs text-[#1e8e3e] font-medium bg-emerald-100/70 dark:bg-emerald-900/40 px-3 py-1 rounded-full">
+                  <i class="fa-solid fa-clock text-[10px]"></i> À tout moment
+                </div>
+              </div>
+              <div id="carousel-img-2" class="carousel-slide hidden flex flex-col items-center justify-center space-y-3">
+                <div class="w-20 h-20 rounded-2xl bg-[#d93025] text-white flex items-center justify-center shadow-lg text-3xl">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="flex items-center gap-1.5 text-xs text-[#d93025] font-medium bg-red-100/70 dark:bg-red-900/40 px-3 py-1 rounded-full">
+                  <i class="fa-solid fa-shield-cat text-[10px]"></i> Chiffrement E2E
                 </div>
               </div>
             </div>
 
-            <!-- Tab 2: Clips List -->
-            <div id="tab-content-clips" class="hidden p-4 space-y-3 min-h-[300px] max-h-[420px] overflow-y-auto">
-              <div id="clips-list" class="space-y-2 text-xs sm:text-sm">
-                <div class="text-center py-16 text-slate-400 dark:text-gray-500 font-normal">
-                  <i class="fa-regular fa-circle-play text-4xl mb-3 block opacity-40"></i>
-                  Aucun extrait découpé.<br>Enregistrez une session pour créer des extraits vidéo.
+            <!-- Slide Titles & Descriptions -->
+            <div class="space-y-2 max-w-sm px-4 min-h-[90px]">
+              <h3 id="carousel-title" class="text-xl font-normal text-slate-800 dark:text-gray-100">
+                Obtenez un lien à partager
+              </h3>
+              <p id="carousel-desc" class="text-xs sm:text-sm text-slate-600 dark:text-gray-400 font-normal leading-relaxed">
+                Cliquez sur <strong class="font-medium text-slate-800 dark:text-gray-200">Nouvelle réunion</strong> pour obtenir un lien à envoyer aux personnes que vous souhaitez inviter.
+              </p>
+            </div>
+
+            <!-- Carousel Controls: Prev, Dots, Next -->
+            <div class="flex items-center gap-3">
+              <button onclick="prevCarouselSlide()" class="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-400 flex items-center justify-center transition" title="Diapositive précédente">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+              </button>
+              <div class="flex items-center gap-1.5">
+                <button onclick="setCarouselSlide(0)" id="carousel-dot-0" class="w-2.5 h-2.5 rounded-full bg-[#1a73e8] transition-all"></button>
+                <button onclick="setCarouselSlide(1)" id="carousel-dot-1" class="w-2 h-2 rounded-full bg-slate-300 dark:bg-[#5f6368] transition-all"></button>
+                <button onclick="setCarouselSlide(2)" id="carousel-dot-2" class="w-2 h-2 rounded-full bg-slate-300 dark:bg-[#5f6368] transition-all"></button>
+              </div>
+              <button onclick="nextCarouselSlide()" class="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-400 flex items-center justify-center transition" title="Diapositive suivante">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Collapsible Recent Meetings & Clips Drawer/Button -->
+          <div class="w-full max-w-md pt-2">
+            <button onclick="toggleRecentDrawer()" class="w-full py-2.5 px-4 rounded-xl border border-slate-200 dark:border-[#3c4043] hover:bg-slate-50 dark:hover:bg-[#303134] text-xs font-medium text-slate-600 dark:text-gray-300 flex items-center justify-between transition">
+              <span class="flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-[#1a73e8]"></i>
+                <span>Vos réunions récentes & extraits (<span id="meetings-count">0</span>)</span>
+              </span>
+              <i id="recent-drawer-chevron" class="fa-solid fa-chevron-down text-xs transition-transform"></i>
+            </button>
+
+            <div id="recent-drawer-content" class="hidden mt-3 bg-white dark:bg-[#303134] rounded-2xl border border-slate-200 dark:border-[#3c4043] shadow-sm overflow-hidden text-left">
+              <!-- Tab Headers -->
+              <div class="flex border-b border-slate-200 dark:border-[#3c4043] bg-slate-50/60 dark:bg-[#282a2d]">
+                <button id="tab-btn-meetings" onclick="switchDashboardTab('meetings')" class="flex-1 py-3 px-4 text-xs font-medium text-[#1a73e8] border-b-2 border-[#1a73e8] text-center transition">
+                  Réunions
+                </button>
+                <button id="tab-btn-clips" onclick="switchDashboardTab('clips')" class="flex-1 py-3 px-4 text-xs font-medium text-slate-500 dark:text-gray-400 hover:text-slate-800 dark:hover:text-gray-200 text-center transition">
+                  Extraits (<span id="clips-count">0</span>)
+                </button>
+              </div>
+
+              <!-- Tab 1: Meetings List -->
+              <div id="tab-content-meetings" class="p-3 space-y-2 max-h-[260px] overflow-y-auto">
+                <div id="meetings-list" class="space-y-1.5 text-xs">
+                  <div class="text-center py-8 text-slate-400 dark:text-gray-500 font-normal">
+                    Aucune réunion récente.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab 2: Clips List -->
+              <div id="tab-content-clips" class="hidden p-3 space-y-2 max-h-[260px] overflow-y-auto">
+                <div id="clips-list" class="space-y-1.5 text-xs">
+                  <div class="text-center py-8 text-slate-400 dark:text-gray-500 font-normal">
+                    Aucun extrait découpé.
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
 
       </div>
@@ -681,6 +754,40 @@
               <div id="local-hand" class="hidden absolute top-3 left-3 text-2xl animate-bounce">✋</div>
             </div>
 
+          </div>
+        </div>
+
+        <!-- Google Meet Live Closed Captions (Sous-titres en direct) -->
+        <div id="captions-overlay" class="hidden absolute bottom-6 left-1/2 -translate-x-1/2 max-w-2xl w-full px-4 z-40 pointer-events-none transition-all">
+          <div class="bg-black/85 backdrop-blur-md text-white text-sm sm:text-base px-5 py-2.5 rounded-xl text-center shadow-xl border border-white/10 font-medium">
+            <span id="captions-text">Écoute en direct...</span>
+          </div>
+        </div>
+
+        <!-- Google Meet Authentic "Votre réunion est prête" Card -->
+        <div id="meeting-ready-card" class="hidden absolute bottom-6 left-6 z-40 w-84 max-w-[calc(100vw-3rem)] bg-white dark:bg-[#303134] rounded-2xl shadow-2xl border border-slate-200 dark:border-[#3c4043] p-5 space-y-3.5 transition-all">
+          <div class="flex items-start justify-between">
+            <h3 class="font-normal text-base text-slate-900 dark:text-gray-100">Votre réunion est prête</h3>
+            <button onclick="closeMeetingReadyCard()" class="text-slate-400 hover:text-slate-600 dark:text-gray-400 dark:hover:text-white p-1 rounded-full transition">
+              <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+          </div>
+          <p class="text-xs text-slate-600 dark:text-gray-300 leading-relaxed font-normal">
+            Partagez ce lien avec les personnes que vous souhaitez inviter à la réunion.
+          </p>
+          <button onclick="copyCurrentMeetingLink()" class="w-full bg-[#1a73e8] hover:bg-[#1557b0] text-white py-2 px-3 rounded-lg text-xs font-medium flex items-center justify-center gap-2 transition shadow-sm">
+            <i class="fa-regular fa-copy"></i>
+            <span>Copier les informations de connexion</span>
+          </button>
+          <div class="flex items-center gap-2 bg-slate-100 dark:bg-[#202124] px-3 py-2 rounded-lg border border-slate-200 dark:border-[#3c4043] text-xs">
+            <span id="meeting-ready-url" class="truncate flex-1 font-mono text-slate-700 dark:text-gray-300 select-all">https://jt-meet-app-production.up.railway.app/...</span>
+            <button onclick="copyCurrentMeetingLink()" class="text-[#1a73e8] hover:text-[#1557b0] p-1 font-medium" title="Copier le lien">
+              <i class="fa-regular fa-clone"></i>
+            </button>
+          </div>
+          <div class="flex items-center gap-2 pt-1 text-[11px] text-slate-500 dark:text-gray-400">
+            <i class="fa-solid fa-shield-halved text-[#1a73e8] text-xs"></i>
+            <span>Les personnes disposant de ce lien peuvent participer.</span>
           </div>
         </div>
 
@@ -916,6 +1023,11 @@
           <!-- Camera Button -->
           <button id="btn-video" onclick="toggleVideo()" class="w-11 h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-lg transition active:scale-95 shadow-sm" title="Activer / Couper la caméra (Ctrl + E)">
             <i class="fa-solid fa-video"></i>
+          </button>
+
+          <!-- Closed Captions Button (CC - Google Meet Style) -->
+          <button id="btn-captions" onclick="toggleClosedCaptions()" class="w-11 h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-sm font-bold transition active:scale-95 shadow-sm" title="Activer les sous-titres en direct (Ctrl + C)">
+            <span class="border border-white/80 text-[10px] px-1 py-0.2 rounded font-mono font-bold tracking-tight">CC</span>
           </button>
 
           <!-- Emoji Reactions Button + Google Meet Reactions Bar -->
@@ -1689,7 +1801,7 @@
       initTheme();
       initSocket();
       checkSavedAuth();
-      handleUrlHash();
+      handleUrlNavigation();
       window.addEventListener('resize', updateVideoGridLayout);
       window.addEventListener('orientationchange', () => setTimeout(updateVideoGridLayout, 150));
       populateMediaDevices();
@@ -1912,6 +2024,19 @@
           const area = document.getElementById('code-editor-area');
           if (area && area.value !== code) area.value = code;
         });
+
+        socket.on('live-caption', ({ userName, text }) => {
+          const overlay = document.getElementById('captions-overlay');
+          const textEl = document.getElementById('captions-text');
+          if (overlay && textEl) {
+            textEl.innerHTML = `<span class="text-[#8ab4f8] font-bold mr-1.5">${userName} :</span> ${text}`;
+            overlay.classList.remove('hidden');
+            clearTimeout(window._captionsTimer);
+            window._captionsTimer = setTimeout(() => {
+              overlay.classList.add('hidden');
+            }, 6000);
+          }
+        });
       }
     }
 
@@ -1948,6 +2073,17 @@
         const el = document.getElementById(`view-${v}`);
         if (el) el.classList.toggle('hidden', v !== viewName);
       });
+
+      // Hide header when inside the meeting room for authentic Google Meet full-screen view
+      const mainHeader = document.querySelector('header');
+      if (mainHeader) {
+        if (viewName === 'room') {
+          mainHeader.classList.add('hidden');
+        } else {
+          mainHeader.classList.remove('hidden');
+        }
+      }
+
       if (viewName === 'dashboard') {
         document.title = "JT-Meet — Visioconférences professionnelles et sécurisées";
         loadDashboardData();
@@ -1964,10 +2100,29 @@
       }
     }
 
-    function handleUrlHash() {
+    function handleUrlNavigation() {
+      // 1. Check path (e.g. /abc-defg-hij or /meet/abc-defg-hij)
+      const path = window.location.pathname.replace(/^\/+|\/+$/g, '');
+      if (path && path !== 'index.html' && !path.startsWith('api/') && !path.startsWith('uploads/')) {
+        const cleanCode = path.replace(/^meet\//, '').toLowerCase();
+        if (/^[a-z0-9_-]+$/.test(cleanCode)) {
+          prepareMeetingInGreenRoom(cleanCode);
+          return;
+        }
+      }
+
+      // 2. Check query params (?room=... or ?code=...)
+      const params = new URLSearchParams(window.location.search);
+      const roomParam = params.get('room') || params.get('code') || params.get('meet');
+      if (roomParam) {
+        prepareMeetingInGreenRoom(roomParam.toLowerCase());
+        return;
+      }
+
+      // 3. Check hash (#meet/... or #share/...)
       const hash = window.location.hash;
       if (hash.startsWith('#meet/')) {
-        const code = hash.replace('#meet/', '');
+        const code = hash.replace('#meet/', '').toLowerCase();
         prepareMeetingInGreenRoom(code);
       } else if (hash.startsWith('#share/')) {
         const token = hash.replace('#share/', '');
@@ -2045,7 +2200,7 @@
 
     async function prepareMeetingInGreenRoom(code) {
       currentRoomCode = code;
-      window.location.hash = `#meet/${code}`;
+      window.history.replaceState({}, '', '/' + code);
       switchView('greenroom');
 
       const nameInput = document.getElementById('greenroom-name-input');
@@ -2296,6 +2451,13 @@
       playAcousticChime('join');
       switchView('room');
       updateRoomClock();
+
+      // Show Google Meet "Votre réunion est prête" floating dialog
+      const meetUrl = `${window.location.origin}/${currentRoomCode}`;
+      const readyUrlEl = document.getElementById('meeting-ready-url');
+      if (readyUrlEl) readyUrlEl.textContent = meetUrl;
+      const readyCard = document.getElementById('meeting-ready-card');
+      if (readyCard) readyCard.classList.remove('hidden');
 
       if (socket) {
         socket.emit('join-room', {
@@ -2851,61 +3013,231 @@
       }
     }
 
+    // Generate authentic Google Meet code: "abc-defg-hij" (3-4-3 letters)
+    function generateClientGoogleMeetCode() {
+      const chars = 'abcdefghijklmnopqrstuvwxyz';
+      const seg = (len) => Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+      return `${seg(3)}-${seg(4)}-${seg(3)}`;
+    }
+
+    function ensureUser() {
+      if (!currentUser) {
+        const guestId = 'guest-' + Math.random().toString(36).substring(2, 9);
+        currentUser = {
+          id: guestId,
+          name: 'Invité'
+        };
+        localStorage.setItem('jt_user', JSON.stringify(currentUser));
+        renderUserUI();
+      }
+      return currentUser;
+    }
+
     async function createMeeting() {
       const menu = document.getElementById('new-meeting-menu');
       if (menu) menu.classList.add('hidden');
-      if (!currentUser) return openAuthModal();
+      ensureUser();
+
+      let code = null;
       try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
         const res = await fetch(`${API_BASE}/meetings`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+          headers,
           body: JSON.stringify({ title: 'Réunion instantanée JT-Meet' })
         });
-        const data = await res.json();
-        if (data.meeting) {
-          prepareMeetingInGreenRoom(data.meeting.code);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.meeting && data.meeting.code) code = data.meeting.code;
         }
       } catch (err) {
-        showToast('Erreur de création de la réunion', 'error');
+        console.warn('API meeting fallback:', err);
       }
+
+      if (!code) code = generateClientGoogleMeetCode();
+      prepareMeetingInGreenRoom(code);
     }
 
     async function createMeetingLater() {
       const menu = document.getElementById('new-meeting-menu');
       if (menu) menu.classList.add('hidden');
-      if (!currentUser) return openAuthModal();
+      ensureUser();
+
+      let code = null;
       try {
+        const headers = { 'Content-Type': 'application/json' };
+        if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
         const res = await fetch(`${API_BASE}/meetings`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+          headers,
           body: JSON.stringify({ title: 'Réunion JT-Meet' })
         });
-        const data = await res.json();
-        if (data.meeting) {
-          const link = `${window.location.origin}/?room=${data.meeting.code}`;
-          document.getElementById('meeting-later-link').textContent = link;
-          document.getElementById('meeting-later-modal').classList.remove('hidden');
-          loadDashboardData();
+        if (res.ok) {
+          const data = await res.json();
+          if (data.meeting && data.meeting.code) code = data.meeting.code;
         }
       } catch (err) {
-        showToast('Erreur de création du lien', 'error');
+        console.warn('API meeting fallback:', err);
       }
+
+      if (!code) code = generateClientGoogleMeetCode();
+      const link = `${window.location.origin}/${code}`;
+      document.getElementById('meeting-later-link').textContent = link;
+      document.getElementById('meeting-later-modal').classList.remove('hidden');
+      loadDashboardData();
     }
 
     function copyMeetingLaterLink() {
       const link = document.getElementById('meeting-later-link').textContent;
       navigator.clipboard.writeText(link);
-      showToast('Lien copié dans le presse-papier !', 'success');
+      showToast('Lien de réunion copié !', 'success');
     }
 
     function closeMeetingLaterModal() {
       document.getElementById('meeting-later-modal').classList.add('hidden');
     }
 
+    function copyCurrentMeetingLink() {
+      const link = `${window.location.origin}/${currentRoomCode}`;
+      navigator.clipboard.writeText(link);
+      showToast('Informations de connexion copiées !', 'success');
+    }
+
+    function closeMeetingReadyCard() {
+      const card = document.getElementById('meeting-ready-card');
+      if (card) card.classList.add('hidden');
+    }
+
+    // Google Meet Dashboard Carousel
+    const carouselData = [
+      {
+        title: "Obtenez un lien à partager",
+        desc: "Cliquez sur <strong class='font-medium text-slate-800 dark:text-gray-200'>Nouvelle réunion</strong> pour obtenir un lien à envoyer aux personnes que vous souhaitez inviter."
+      },
+      {
+        title: "Planifier à l'avance",
+        desc: "Organisez vos visioconférences à l'avance et envoyez des invitations personnalisées aux participants."
+      },
+      {
+        title: "Votre réunion est sécurisée",
+        desc: "Personne ne peut participer à une réunion sans y avoir été invité ou admis par l'organisateur."
+      }
+    ];
+    let currentCarouselIndex = 0;
+
+    function setCarouselSlide(index) {
+      currentCarouselIndex = (index + carouselData.length) % carouselData.length;
+      for (let i = 0; i < 3; i++) {
+        const slide = document.getElementById(`carousel-img-${i}`);
+        const dot = document.getElementById(`carousel-dot-${i}`);
+        if (slide) slide.classList.toggle('hidden', i !== currentCarouselIndex);
+        if (dot) {
+          dot.className = i === currentCarouselIndex 
+            ? 'w-2.5 h-2.5 rounded-full bg-[#1a73e8] transition-all'
+            : 'w-2 h-2 rounded-full bg-slate-300 dark:bg-[#5f6368] transition-all';
+        }
+      }
+      const titleEl = document.getElementById('carousel-title');
+      const descEl = document.getElementById('carousel-desc');
+      if (titleEl) titleEl.textContent = carouselData[currentCarouselIndex].title;
+      if (descEl) descEl.innerHTML = carouselData[currentCarouselIndex].desc;
+    }
+
+    function nextCarouselSlide() {
+      setCarouselSlide(currentCarouselIndex + 1);
+    }
+    function prevCarouselSlide() {
+      setCarouselSlide(currentCarouselIndex - 1);
+    }
+
+    function toggleRecentDrawer() {
+      const content = document.getElementById('recent-drawer-content');
+      const chev = document.getElementById('recent-drawer-chevron');
+      if (content) {
+        content.classList.toggle('hidden');
+        if (chev) chev.classList.toggle('rotate-180', !content.classList.contains('hidden'));
+      }
+    }
+
+    // Google Meet Live Speech-to-Text Closed Captions
+    let captionsActive = false;
+    let speechRecognizer = null;
+
+    function toggleClosedCaptions() {
+      captionsActive = !captionsActive;
+      const btn = document.getElementById('btn-captions');
+      const overlay = document.getElementById('captions-overlay');
+
+      if (btn) {
+        btn.classList.toggle('bg-[#1a73e8]', captionsActive);
+        btn.classList.toggle('bg-[#3c4043]', !captionsActive);
+      }
+
+      if (captionsActive) {
+        startSpeechCaptions();
+        showToast('Sous-titres en direct activés (fr-FR)', 'info');
+      } else {
+        stopSpeechCaptions();
+        if (overlay) overlay.classList.add('hidden');
+        showToast('Sous-titres désactivés', 'info');
+      }
+    }
+
+    function startSpeechCaptions() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec) {
+        showToast('Reconnaissance vocale non prise en charge par ce navigateur', 'warning');
+        return;
+      }
+      try {
+        speechRecognizer = new SpeechRec();
+        speechRecognizer.continuous = true;
+        speechRecognizer.interimResults = true;
+        speechRecognizer.lang = 'fr-FR';
+
+        speechRecognizer.onresult = (event) => {
+          let transcript = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+          }
+          const overlay = document.getElementById('captions-overlay');
+          const textEl = document.getElementById('captions-text');
+          const myName = currentUser ? currentUser.name : 'Vous';
+          if (overlay && textEl) {
+            textEl.innerHTML = `<span class="text-[#8ab4f8] font-bold mr-1.5">${myName} :</span> ${transcript}`;
+            overlay.classList.remove('hidden');
+          }
+          if (socket && currentRoomCode) {
+            socket.emit('live-caption', {
+              roomId: currentRoomCode,
+              userName: myName,
+              text: transcript
+            });
+          }
+        };
+
+        speechRecognizer.onerror = (e) => {
+          console.warn('Speech recognition error:', e);
+        };
+
+        speechRecognizer.start();
+      } catch (err) {
+        console.warn('Cannot start speech recognition:', err);
+      }
+    }
+
+    function stopSpeechCaptions() {
+      if (speechRecognizer) {
+        try { speechRecognizer.stop(); } catch(e){}
+        speechRecognizer = null;
+      }
+    }
+
     function openScheduleModal() {
       const menu = document.getElementById('new-meeting-menu');
       if (menu) menu.classList.add('hidden');
-      if (!currentUser) return openAuthModal();
+      ensureUser();
       const now = new Date();
       now.setHours(now.getHours() + 1);
       now.setMinutes(0);
@@ -3007,7 +3339,7 @@
       const cards = grid.querySelectorAll('[id^="peer-card-"]');
       cards.forEach(c => c.remove());
 
-      window.location.hash = '';
+      window.history.replaceState({}, '', '/');
       document.getElementById('postmeeting-code-text').textContent = `Réunion ${currentRoomCode || ''} clôturée.`;
       switchView('postmeeting');
     }

@@ -1,17 +1,17 @@
 import { v4 as uuidv4 } from 'uuid';
 import { getDB, memoryStore } from '../config/db.js';
 
-// Generate human-friendly meeting code like "jt-abc-def"
+// Generate authentic Google Meet code format: "abc-defg-hij" (3 letters - 4 letters - 3 letters)
 const generateMeetingCode = () => {
   const chars = 'abcdefghijklmnopqrstuvwxyz';
   const segment = (len) => Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-  return `jt-${segment(3)}-${segment(3)}`;
+  return `${segment(3)}-${segment(4)}-${segment(3)}`;
 };
 
 export const createMeeting = async (req, res) => {
   try {
     const { title, description, scheduled_start, max_participants, is_locked, settings } = req.body;
-    const hostId = req.user.id;
+    const hostId = req.user && req.user.id ? req.user.id : `guest-${uuidv4().substring(0, 8)}`;
     const meetingId = uuidv4();
     const code = generateMeetingCode();
     const meetingTitle = title && title.trim() ? title.trim() : 'Nouvelle Réunion JT-Meet';

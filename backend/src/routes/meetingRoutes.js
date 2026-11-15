@@ -4,9 +4,10 @@ import { authenticateToken, optionalAuth } from '../middlewares/authMiddleware.j
 
 const router = express.Router();
 
-router.post('/', authenticateToken, createMeeting);
+// Allow guests or authenticated users to create instant/scheduled meetings like Google Meet
+router.post('/', optionalAuth, createMeeting);
 router.get('/my-meetings', authenticateToken, getUserMeetings);
 router.get('/:code', optionalAuth, getMeetingByCode);
-router.put('/:id/end', authenticateToken, endMeeting);
+router.put('/:id/end', optionalAuth, endMeeting);
 
 export default router;

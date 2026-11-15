@@ -74,6 +74,14 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// SPA Catch-all: serve index.html for direct Google Meet-style URLs (e.g. /abc-defg-hij or /meet/abc-defg-hij)
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api/') || req.path.startsWith('/socket.io/')) {
+    return res.status(404).json({ error: 'Endpoint non trouvé' });
+  }
+  res.sendFile(path.join(publicDir, 'index.html'));
+});
+
 // Setup WebRTC and collaboration sockets
 setupMeetingSocket(io);
 

@@ -128,6 +128,15 @@ export const setupMeetingSocket = (io) => {
       });
     });
 
+    // 6b. Live Speech Captions Broadcast
+    socket.on('live-caption', ({ roomId, userName, text }) => {
+      if (!roomId || !text) return;
+      socket.to(roomId).emit('live-caption', {
+        userName: userName || (currentUser ? currentUser.userName : 'Participant'),
+        text
+      });
+    });
+
     // 7. Toggle Media States (Mute, Video off)
     socket.on('toggle-media', ({ isAudioMuted, isVideoOff }) => {
       if (currentRoom && rooms.has(currentRoom)) {
