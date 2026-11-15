@@ -1672,12 +1672,20 @@
           <kbd class="px-2.5 py-1 bg-slate-100 dark:bg-[#202124] border border-slate-300 dark:border-[#5f6368] rounded font-mono text-[11px] font-medium">Ctrl + E</kbd>
         </div>
         <div class="flex items-center justify-between py-2">
-          <span>Lever la main pour prendre la parole</span>
+          <span>Lever la main / Baisser la main</span>
           <kbd class="px-2.5 py-1 bg-slate-100 dark:bg-[#202124] border border-slate-300 dark:border-[#5f6368] rounded font-mono text-[11px] font-medium">Ctrl + H</kbd>
         </div>
         <div class="flex items-center justify-between py-2">
-          <span>Partage d'écran direct</span>
+          <span>Activer les sous-titres en direct (CC)</span>
+          <kbd class="px-2.5 py-1 bg-slate-100 dark:bg-[#202124] border border-slate-300 dark:border-[#5f6368] rounded font-mono text-[11px] font-medium">Ctrl + C</kbd>
+        </div>
+        <div class="flex items-center justify-between py-2">
+          <span>Partager / Arrêter le partage d'écran</span>
           <kbd class="px-2.5 py-1 bg-slate-100 dark:bg-[#202124] border border-slate-300 dark:border-[#5f6368] rounded font-mono text-[11px] font-medium">Ctrl + S</kbd>
+        </div>
+        <div class="flex items-center justify-between py-2">
+          <span>Afficher les raccourcis clavier</span>
+          <kbd class="px-2.5 py-1 bg-slate-100 dark:bg-[#202124] border border-slate-300 dark:border-[#5f6368] rounded font-mono text-[11px] font-medium">Shift + ?</kbd>
         </div>
       </div>
 
@@ -4368,6 +4376,20 @@
           toggleClosedCaptions();
           return;
         }
+      }
+
+      // Ctrl+S or Cmd+S: Screen Share
+      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+        e.preventDefault();
+        toggleScreenShare();
+        return;
+      }
+
+      // ? or Shift+/: Open Keyboard Shortcuts & Help Modal
+      if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+        e.preventDefault();
+        openHelpModal();
+        return;
       }
     });
   </script>
