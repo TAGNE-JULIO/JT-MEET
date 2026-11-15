@@ -487,29 +487,29 @@
     <!-- ======================================================== -->
     <!-- VIEW 1: DASHBOARD (AUTHENTIC GOOGLE MEET ENTERPRISE)      -->
     <!-- ======================================================== -->
-    <div id="view-dashboard" class="max-w-7xl w-full mx-auto px-4 sm:px-8 lg:px-12 py-8 sm:py-16 flex-1 overflow-y-auto">
+    <div id="view-dashboard" class="max-w-7xl w-full mx-auto px-4 sm:px-8 lg:px-12 py-8 sm:py-14 flex-1 overflow-y-auto">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
 
         <!-- Left Column: Google Meet Headline & Actions -->
-        <div class="lg:col-span-7 space-y-7">
+        <div class="lg:col-span-7 space-y-8">
           <div class="space-y-4">
-            <h1 class="text-3xl sm:text-4xl lg:text-[44px] font-normal tracking-tight text-slate-900 dark:text-gray-100 leading-tight">
+            <h1 class="text-3xl sm:text-4xl lg:text-[46px] font-normal tracking-tight text-slate-900 dark:text-gray-100 leading-[1.18]">
               Des visioconférences de qualité professionnelle pour tous.
             </h1>
             <p class="text-base sm:text-lg text-slate-600 dark:text-gray-400 leading-relaxed font-normal max-w-xl">
-              Organisez des réunions sécurisées et collaborez en direct avec vos équipes, partenaires ou clients, en toute simplicité.
+              Connectez-vous, collaborez et célébrez les moments importants où que vous soyez en toute sécurité avec JT-Meet.
             </p>
           </div>
 
           <!-- Action Controls: Nouvelle réunion + Join input -->
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-1">
             
             <!-- Nouvelle réunion Button with Dropdown -->
             <div class="relative inline-block text-left">
-              <button id="btn-new-meeting" onclick="toggleNewMeetingMenu(event)" class="w-full sm:w-auto bg-[#1a73e8] hover:bg-[#1557b0] text-white font-medium px-5 py-3 rounded-lg flex items-center justify-center gap-2.5 transition shadow-sm text-sm sm:text-base">
-                <i class="fa-solid fa-video"></i>
+              <button id="btn-new-meeting" onclick="toggleNewMeetingMenu(event)" class="w-full sm:w-auto bg-[#1a73e8] hover:bg-[#1557b0] text-white font-medium px-5 py-3.5 rounded-lg flex items-center justify-center gap-2.5 transition shadow-sm text-sm sm:text-base active:scale-95">
+                <i class="fa-solid fa-video text-base"></i>
                 <span>Nouvelle réunion</span>
-                <i class="fa-solid fa-chevron-down text-xs ml-1 opacity-75"></i>
+                <i class="fa-solid fa-chevron-down text-xs ml-0.5 opacity-75"></i>
               </button>
 
               <!-- Dropdown Menu -->
@@ -540,22 +540,23 @@
 
             <!-- Join Meeting Input and Participate Button -->
             <div class="flex items-center gap-2">
-              <div class="flex items-center border border-slate-300 dark:border-[#5f6368] rounded-lg px-3.5 py-2.5 bg-white dark:bg-[#202124] focus-within:border-[#1a73e8] focus-within:ring-1 focus-within:ring-[#1a73e8] transition flex-1 sm:flex-initial">
+              <div class="flex items-center border border-slate-300 dark:border-[#5f6368] rounded-lg px-3.5 py-3 bg-white dark:bg-[#202124] focus-within:border-[#1a73e8] focus-within:ring-1 focus-within:ring-[#1a73e8] transition flex-1 sm:flex-initial shadow-sm">
                 <i class="fa-regular fa-keyboard text-slate-400 dark:text-gray-400 mr-2.5 text-sm"></i>
-                <input id="input-join-code" type="text" placeholder="Saisir un code ou un lien" oninput="handleJoinInput(this)" onkeydown="if(event.key==='Enter')joinMeetingByInput()" class="bg-transparent text-sm focus:outline-none text-slate-800 dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 w-full sm:w-56 font-normal">
+                <input id="input-join-code" type="text" placeholder="Saisir un code ou un lien" oninput="handleJoinInput(this)" onkeydown="if(event.key==='Enter')joinMeetingByInput()" class="bg-transparent text-sm focus:outline-none text-slate-800 dark:text-gray-100 placeholder-slate-400 dark:placeholder-gray-500 w-full sm:w-60 font-normal">
               </div>
-              <button id="btn-participate" onclick="joinMeetingByInput()" disabled class="text-sm font-medium px-4 py-2.5 rounded-lg text-slate-400 dark:text-gray-500 cursor-not-allowed transition hover:bg-slate-100 dark:hover:bg-white/[0.04]">
+              <button id="btn-participate" onclick="joinMeetingByInput()" disabled class="text-sm font-medium px-4 py-3 rounded-lg text-slate-400 dark:text-gray-500 cursor-not-allowed transition hover:bg-slate-100 dark:hover:bg-white/[0.04]">
                 Participer
               </button>
             </div>
 
           </div>
 
-          <!-- Security note separator -->
+          <!-- Security note separator with 'En savoir plus' -->
           <div class="border-t border-slate-200 dark:border-[#3c4043] pt-6 max-w-xl">
-            <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-gray-400">
-              <i class="fa-solid fa-lock text-[#1a73e8]"></i>
-              <span>Visioconférences chiffrées de bout en bout et protégées.</span>
+            <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-gray-400 flex-wrap">
+              <i class="fa-solid fa-shield-halved text-[#1a73e8]"></i>
+              <span>Visioconférences professionnelles sécurisées.</span>
+              <a href="#" onclick="openHelpModal(); return false;" class="text-[#1a73e8] hover:underline font-medium">En savoir plus sur JT-Meet</a>
             </div>
           </div>
         </div>
@@ -564,33 +565,58 @@
         <div class="lg:col-span-5 flex flex-col items-center justify-center space-y-6 text-center">
           
           <!-- Carousel Card -->
-          <div class="w-full flex flex-col items-center space-y-6">
+          <div id="landing-carousel" class="w-full flex flex-col items-center space-y-6">
             <!-- Circular Illustration Area -->
-            <div class="relative w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-blue-50 dark:bg-[#303134] border border-blue-100 dark:border-[#3c4043] flex items-center justify-center shadow-inner overflow-hidden transition-all">
-              <div id="carousel-img-0" class="carousel-slide flex flex-col items-center justify-center space-y-3">
-                <div class="w-20 h-20 rounded-2xl bg-[#1a73e8] text-white flex items-center justify-center shadow-lg text-3xl">
-                  <i class="fa-solid fa-link"></i>
+            <div class="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full bg-gradient-to-b from-blue-50/80 to-slate-100/60 dark:from-[#303134] dark:to-[#202124] border border-blue-100/80 dark:border-[#3c4043] flex items-center justify-center shadow-lg overflow-hidden transition-all">
+              
+              <!-- Slide 0: Lien sécurisé -->
+              <div id="carousel-img-0" class="carousel-slide flex flex-col items-center justify-center space-y-3.5">
+                <div class="relative">
+                  <div class="w-20 h-20 rounded-2xl bg-[#1a73e8] text-white flex items-center justify-center shadow-xl text-3xl">
+                    <i class="fa-solid fa-link"></i>
+                  </div>
+                  <div class="absolute -bottom-2 -right-2 w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs shadow-md border-2 border-white dark:border-[#202124]">
+                    <i class="fa-solid fa-check"></i>
+                  </div>
                 </div>
-                <div class="flex items-center gap-1.5 text-xs text-[#1a73e8] font-medium bg-blue-100/70 dark:bg-blue-900/40 px-3 py-1 rounded-full">
-                  <i class="fa-solid fa-lock text-[10px]"></i> Lien sécurisé
-                </div>
-              </div>
-              <div id="carousel-img-1" class="carousel-slide hidden flex flex-col items-center justify-center space-y-3">
-                <div class="w-20 h-20 rounded-2xl bg-[#1e8e3e] text-white flex items-center justify-center shadow-lg text-3xl">
-                  <i class="fa-regular fa-calendar-check"></i>
-                </div>
-                <div class="flex items-center gap-1.5 text-xs text-[#1e8e3e] font-medium bg-emerald-100/70 dark:bg-emerald-900/40 px-3 py-1 rounded-full">
-                  <i class="fa-solid fa-clock text-[10px]"></i> À tout moment
-                </div>
-              </div>
-              <div id="carousel-img-2" class="carousel-slide hidden flex flex-col items-center justify-center space-y-3">
-                <div class="w-20 h-20 rounded-2xl bg-[#d93025] text-white flex items-center justify-center shadow-lg text-3xl">
-                  <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <div class="flex items-center gap-1.5 text-xs text-[#d93025] font-medium bg-red-100/70 dark:bg-red-900/40 px-3 py-1 rounded-full">
-                  <i class="fa-solid fa-shield-cat text-[10px]"></i> Chiffrement E2E
+                <div class="bg-white dark:bg-[#202124] px-4 py-1.5 rounded-full border border-slate-200 dark:border-[#3c4043] shadow-sm flex items-center gap-2 text-xs font-mono text-[#1a73e8] dark:text-[#8ab4f8]">
+                  <i class="fa-solid fa-lock text-[10px]"></i>
+                  <span>jt-meet/xxx-yyyy-zzz</span>
                 </div>
               </div>
+
+              <!-- Slide 1: Planifier -->
+              <div id="carousel-img-1" class="carousel-slide hidden flex flex-col items-center justify-center space-y-3.5">
+                <div class="relative">
+                  <div class="w-20 h-20 rounded-2xl bg-[#1e8e3e] text-white flex items-center justify-center shadow-xl text-3xl">
+                    <i class="fa-regular fa-calendar-check"></i>
+                  </div>
+                  <div class="absolute -bottom-2 -right-2 w-7 h-7 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs shadow-md border-2 border-white dark:border-[#202124]">
+                    <i class="fa-solid fa-clock"></i>
+                  </div>
+                </div>
+                <div class="bg-white dark:bg-[#202124] px-4 py-1.5 rounded-full border border-slate-200 dark:border-[#3c4043] shadow-sm flex items-center gap-2 text-xs text-[#1e8e3e] dark:text-emerald-400 font-medium">
+                  <i class="fa-regular fa-bell text-[11px]"></i>
+                  <span>Planification à l'avance</span>
+                </div>
+              </div>
+
+              <!-- Slide 2: Sécurité -->
+              <div id="carousel-img-2" class="carousel-slide hidden flex flex-col items-center justify-center space-y-3.5">
+                <div class="relative">
+                  <div class="w-20 h-20 rounded-2xl bg-[#ea4335] text-white flex items-center justify-center shadow-xl text-3xl">
+                    <i class="fa-solid fa-shield-halved"></i>
+                  </div>
+                  <div class="absolute -bottom-2 -right-2 w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs shadow-md border-2 border-white dark:border-[#202124]">
+                    <i class="fa-solid fa-lock"></i>
+                  </div>
+                </div>
+                <div class="bg-white dark:bg-[#202124] px-4 py-1.5 rounded-full border border-slate-200 dark:border-[#3c4043] shadow-sm flex items-center gap-2 text-xs text-[#ea4335] dark:text-red-400 font-medium">
+                  <i class="fa-solid fa-fingerprint text-[11px]"></i>
+                  <span>Chiffrement E2E actif</span>
+                </div>
+              </div>
+
             </div>
 
             <!-- Slide Titles & Descriptions -->
@@ -663,6 +689,40 @@
         </div>
 
       </div>
+
+      <!-- Professional Features Cards Section -->
+      <div class="mt-14 pt-10 border-t border-slate-200 dark:border-[#3c4043] grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-5 rounded-2xl bg-white dark:bg-[#303134] border border-slate-200/80 dark:border-[#3c4043] space-y-2.5 transition hover:shadow-md">
+          <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/40 text-[#1a73e8] dark:text-[#8ab4f8] flex items-center justify-center text-lg">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <h4 class="font-medium text-sm text-slate-900 dark:text-gray-100">Démarrage instantané</h4>
+          <p class="text-xs text-slate-600 dark:text-gray-400 leading-relaxed font-normal">
+            Lancez un appel en 1 clic sans inscription obligatoire. Partagez votre code 3-4-3 pour inviter vos collègues en quelques secondes.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white dark:bg-[#303134] border border-slate-200/80 dark:border-[#3c4043] space-y-2.5 transition hover:shadow-md">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/40 text-[#1e8e3e] dark:text-emerald-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h4 class="font-medium text-sm text-slate-900 dark:text-gray-100">Sécurité & Confidentialité</h4>
+          <p class="text-xs text-slate-600 dark:text-gray-400 leading-relaxed font-normal">
+            Toutes les réunions sont sécurisées avec un chiffrement WebRTC de bout en bout et un contrôle d'accès d'organisateur strict.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white dark:bg-[#303134] border border-slate-200/80 dark:border-[#3c4043] space-y-2.5 transition hover:shadow-md">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <h4 class="font-medium text-sm text-slate-900 dark:text-gray-100">Collaboration complète</h4>
+          <p class="text-xs text-slate-600 dark:text-gray-400 leading-relaxed font-normal">
+            Partage d'écran HD, sous-titres en direct [CC], tableau blanc collaboratif, éditeur de code et réactions emojis en temps réel.
+          </p>
+        </div>
+      </div>
+    </div>
     </div>
 
     <!-- ======================================================== -->
@@ -3390,6 +3450,19 @@
     function prevCarouselSlide() {
       setCarouselSlide(currentCarouselIndex - 1);
     }
+
+    // Google Meet Carousel Auto-Advance with Hover Pause
+    let carouselAutoTimer = setInterval(nextCarouselSlide, 6000);
+    document.addEventListener('DOMContentLoaded', () => {
+      const carouselEl = document.getElementById('landing-carousel');
+      if (carouselEl) {
+        carouselEl.addEventListener('mouseenter', () => clearInterval(carouselAutoTimer));
+        carouselEl.addEventListener('mouseleave', () => {
+          clearInterval(carouselAutoTimer);
+          carouselAutoTimer = setInterval(nextCarouselSlide, 6000);
+        });
+      }
+    });
 
     function toggleRecentDrawer() {
       const content = document.getElementById('recent-drawer-content');
