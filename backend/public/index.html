@@ -461,6 +461,11 @@
         <i class="fa-solid fa-gear text-base sm:text-lg"></i>
       </button>
 
+      <!-- Theme Toggle Button (Mode Sombre / Clair) -->
+      <button id="theme-toggle-btn" onclick="toggleTheme()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-300 flex items-center justify-center transition" title="Basculer Mode Clair / Sombre">
+        <i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-500 text-base sm:text-lg"></i>
+      </button>
+
       <!-- User Profile Badge -->
       <div id="user-badge" class="hidden items-center gap-2.5 bg-slate-100 dark:bg-[#303134] pl-2 pr-3 py-1.5 rounded-full border border-slate-300 dark:border-[#3c4043] text-xs sm:text-sm">
         <div class="w-7 h-7 rounded-full bg-[#1a73e8] text-white font-bold flex items-center justify-center text-xs" id="user-avatar">U</div>
@@ -1133,6 +1138,10 @@
                 <i class="fa-solid fa-expand text-[#8ab4f8] text-sm"></i>
                 <span>Plein écran</span>
               </button>
+              <button onclick="toggleTheme(); closeMoreTools();" class="w-full px-4 py-2.5 text-left hover:bg-[#3c4043] text-gray-200 flex items-center gap-3 transition">
+                <i class="fa-solid fa-circle-half-stroke text-[#8ab4f8] text-sm"></i>
+                <span>Changer de thème (Clair / Sombre)</span>
+              </button>
               <div class="my-1 border-t border-[#5f6368]/40"></div>
               <button onclick="openSettingsModal(); closeMoreTools();" class="w-full px-4 py-2.5 text-left hover:bg-[#3c4043] text-gray-200 flex items-center gap-3 transition">
                 <i class="fa-solid fa-gear text-[#8ab4f8] text-sm"></i>
@@ -1437,8 +1446,23 @@
 
           <!-- TAB 3: GENERAL SETTINGS -->
           <div id="settings-tab-general" class="hidden space-y-6">
+            <!-- Theme & Appearance -->
+            <div class="space-y-2">
+              <label class="block text-xs font-medium text-slate-600 dark:text-gray-400">Apparence & Thème d'affichage</label>
+              <div class="grid grid-cols-2 gap-3">
+                <button type="button" onclick="applyTheme('light', true)" class="py-2.5 px-3 rounded-lg border border-slate-300 dark:border-[#5f6368] hover:bg-slate-100 dark:hover:bg-[#3c4043] flex items-center justify-center gap-2 text-xs font-medium text-slate-800 dark:text-gray-200 transition">
+                  <i class="fa-solid fa-sun text-amber-500"></i>
+                  <span>Mode Clair</span>
+                </button>
+                <button type="button" onclick="applyTheme('dark', true)" class="py-2.5 px-3 rounded-lg border border-slate-300 dark:border-[#5f6368] hover:bg-slate-100 dark:hover:bg-[#3c4043] flex items-center justify-center gap-2 text-xs font-medium text-slate-800 dark:text-gray-200 transition">
+                  <i class="fa-solid fa-moon text-indigo-400"></i>
+                  <span>Mode Sombre</span>
+                </button>
+              </div>
+            </div>
+
             <!-- Diagnostics & Network Telemetry -->
-            <div>
+            <div class="pt-3 border-t border-slate-200 dark:border-[#3c4043]">
               <h4 class="text-sm font-medium text-slate-900 dark:text-gray-100 mb-3">Télémétrie et performances réseau</h4>
               <div class="grid grid-cols-2 gap-3 font-mono text-xs">
                 <div class="p-3 rounded-lg bg-slate-50 dark:bg-[#303134] border border-slate-200 dark:border-[#3c4043] space-y-1">
