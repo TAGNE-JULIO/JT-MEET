@@ -32,6 +32,18 @@
       --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: #202124;
@@ -40,6 +52,21 @@
     }
     code, .font-mono {
       font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Video tiles shrink & scale adaptively without overflowing */
+    #video-wrapper {
+      min-height: 0;
+      min-width: 0;
+    }
+    #video-grid {
+      min-height: 0;
+      min-width: 0;
+    }
+    #local-video-card,
+    [id^="peer-card-"] {
+      min-height: 0 !important;
+      min-width: 0 !important;
     }
     
     /* Google Meet Corporate Dark Mode Surfaces (Solid, No Gradients) */
@@ -419,23 +446,25 @@
       <!-- Live Date & Clock -->
       <span id="live-clock" class="hidden sm:inline-block text-sm text-slate-600 dark:text-gray-400 font-normal mr-2 select-none">--:-- • ---</span>
 
-      <!-- Help Button -->
-      <button onclick="openHelpModal()" class="w-10 h-10 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-300 flex items-center justify-center transition" title="Assistance et raccourcis">
-        <i class="fa-regular fa-circle-question text-lg"></i>
+      <!-- Help Button (Desktop/Tablet) -->
+      <button onclick="openHelpModal()" class="hidden sm:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-300 items-center justify-center transition" title="Assistance et raccourcis">
+        <i class="fa-regular fa-circle-question text-base sm:text-lg"></i>
       </button>
 
-      <!-- Feedback Button -->
-      <button onclick="openFeedbackModal()" class="w-10 h-10 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-300 flex items-center justify-center transition" title="Signaler un problème">
-        <i class="fa-regular fa-message text-lg"></i>
+      <!-- Feedback Button (Desktop) -->
+      <button onclick="openFeedbackModal()" class="hidden md:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-300 items-center justify-center transition" title="Signaler un problème">
+        <i class="fa-regular fa-message text-base sm:text-lg"></i>
       </button>
 
       <!-- Settings Modal Trigger -->
-      <button onclick="openSettingsModal()" class="w-10 h-10 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-300 flex items-center justify-center transition" title="Paramètres">
-        <i class="fa-solid fa-gear text-lg"></i>
+      <button onclick="openSettingsModal()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-300 flex items-center justify-center transition" title="Paramètres">
+        <i class="fa-solid fa-gear text-base sm:text-lg"></i>
       </button>
 
       <!-- Theme Toggle Button (Light / Dark) -->
-      <button id="theme-toggle-btn" onclick="toggleTheme()" class="w-10 h-10 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-300 flex items-center justify-center transition" title="Basculer Mode Clair / Sombre">
+      <button id="theme-toggle-btn" onclick="toggleTheme()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-slate-100 dark:hover:bg-[#3c4043] text-slate-600 dark:text-gray-300 flex items-center justify-center transition" title="Basculer Mode Clair / Sombre">
+        <i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-500 text-base sm:text-lg"></i>
+      </button>
         <i id="theme-toggle-icon" class="fa-solid fa-sun text-amber-500 text-lg"></i>
       </button>
 
@@ -641,8 +670,8 @@
     <!-- ======================================================== -->
     <!-- VIEW 2: GREEN ROOM / SALON DE PRÉPARATION (GOOGLE MEET STYLE) -->
     <!-- ======================================================== -->
-    <div id="view-greenroom" class="hidden flex-1 max-w-5xl w-full mx-auto p-4 sm:p-8 flex items-center justify-center">
-      <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+    <div id="view-greenroom" class="hidden flex-1 max-w-5xl w-full mx-auto p-3 sm:p-6 md:p-8 flex flex-col justify-start sm:justify-center items-center overflow-y-auto">
+      <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center my-auto">
         
         <!-- Left: Live Video Preview + Real-Time Audio Engine -->
         <div class="lg:col-span-7 space-y-4">
@@ -733,11 +762,11 @@
         <div id="emoji-container" class="absolute inset-0 pointer-events-none z-50 overflow-hidden"></div>
 
         <!-- Adaptive Smart Video Grid -->
-        <div class="flex-1 p-2 sm:p-5 overflow-y-auto flex items-center justify-center" id="video-wrapper">
-          <div id="video-grid" class="w-full h-full max-h-full grid grid-cols-1 gap-3 sm:gap-5 items-center justify-center">
+        <div class="flex-1 p-2 sm:p-4 overflow-hidden flex items-center justify-center min-h-0 min-w-0" id="video-wrapper">
+          <div id="video-grid" class="w-full h-full max-h-full grid grid-cols-1 gap-2 sm:gap-4 items-center justify-center min-h-0 min-w-0">
             
             <!-- Local participant card -->
-            <div class="relative bg-[#3c4043] rounded-2xl overflow-hidden border border-white/[0.08] shadow-lg flex items-center justify-center w-full h-full min-h-[220px] transition-all duration-300 group" id="local-video-card">
+            <div class="relative bg-[#3c4043] rounded-xl sm:rounded-2xl overflow-hidden border border-white/[0.08] shadow-lg flex items-center justify-center w-full h-full min-h-0 min-w-0 transition-all duration-300 group" id="local-video-card">
               <video id="local-video" autoplay muted playsinline class="w-full h-full object-cover"></video>
               <div id="local-video-avatar" class="hidden w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#1a73e8] text-white text-3xl sm:text-4xl font-medium items-center justify-center shadow-md">
                 U
@@ -765,7 +794,7 @@
         </div>
 
         <!-- Google Meet Authentic "Votre réunion est prête" Card -->
-        <div id="meeting-ready-card" class="hidden absolute bottom-6 left-6 z-40 w-84 max-w-[calc(100vw-3rem)] bg-white dark:bg-[#303134] rounded-2xl shadow-2xl border border-slate-200 dark:border-[#3c4043] p-5 space-y-3.5 transition-all">
+        <div id="meeting-ready-card" class="hidden absolute bottom-20 sm:bottom-24 left-3 right-3 sm:left-6 sm:right-auto sm:w-84 max-w-full sm:max-w-sm bg-white dark:bg-[#303134] rounded-2xl shadow-2xl border border-slate-200 dark:border-[#3c4043] p-4 sm:p-5 space-y-3.5 transition-all z-40">
           <div class="flex items-start justify-between">
             <h3 class="font-normal text-base text-slate-900 dark:text-gray-100">Votre réunion est prête</h3>
             <button onclick="closeMeetingReadyCard()" class="text-slate-400 hover:text-slate-600 dark:text-gray-400 dark:hover:text-white p-1 rounded-full transition">
@@ -1003,36 +1032,36 @@
       </div>
 
       <!-- GOOGLE MEET AUTHENTIC BOTTOM CONTROL BAR -->
-      <footer class="h-20 bg-[#202124] px-4 sm:px-6 flex items-center justify-between z-30 select-none flex-shrink-0 border-t border-[#3c4043]/50">
+      <footer class="h-16 sm:h-20 bg-[#202124] px-2 sm:px-6 flex items-center justify-between z-30 select-none flex-shrink-0 border-t border-[#3c4043]/50 pb-safe">
         
-        <!-- LEFT: Meeting Code & Time -->
-        <div class="hidden md:flex items-center gap-3 text-white text-sm font-medium w-64 min-w-0">
+        <!-- LEFT: Meeting Code & Time (Desktop) -->
+        <div class="hidden lg:flex items-center gap-3 text-white text-sm font-medium w-48 sm:w-64 min-w-0">
           <span id="room-time" class="font-normal text-gray-300">--:--</span>
           <span class="text-gray-500">|</span>
           <span id="room-code-display" class="font-medium tracking-wide truncate">jt-xxx-xxx</span>
         </div>
 
         <!-- CENTER: Core AV Controls + Reactions + Screen Share + End Call -->
-        <div class="flex items-center gap-2 sm:gap-3 justify-center flex-1 md:flex-initial">
+        <div class="flex items-center gap-1.5 sm:gap-2.5 md:gap-3 justify-center flex-1 lg:flex-initial">
           
           <!-- Microphone Button -->
-          <button id="btn-audio" onclick="toggleAudio()" class="w-11 h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-lg transition active:scale-95 shadow-sm" title="Activer / Couper le micro (Ctrl + D)">
+          <button id="btn-audio" onclick="toggleAudio()" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-base sm:text-lg transition active:scale-95 shadow-sm" title="Activer / Couper le micro (Ctrl + D)">
             <i class="fa-solid fa-microphone"></i>
           </button>
 
           <!-- Camera Button -->
-          <button id="btn-video" onclick="toggleVideo()" class="w-11 h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-lg transition active:scale-95 shadow-sm" title="Activer / Couper la caméra (Ctrl + E)">
+          <button id="btn-video" onclick="toggleVideo()" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-base sm:text-lg transition active:scale-95 shadow-sm" title="Activer / Couper la caméra (Ctrl + E)">
             <i class="fa-solid fa-video"></i>
           </button>
 
-          <!-- Closed Captions Button (CC - Google Meet Style) -->
-          <button id="btn-captions" onclick="toggleClosedCaptions()" class="w-11 h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-sm font-bold transition active:scale-95 shadow-sm" title="Activer les sous-titres en direct (Ctrl + C)">
+          <!-- Closed Captions Button (CC - Google Meet Style) - hidden on mobile, visible on sm -->
+          <button id="btn-captions" onclick="toggleClosedCaptions()" class="hidden sm:flex w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white items-center justify-center text-sm font-bold transition active:scale-95 shadow-sm" title="Activer les sous-titres en direct (Ctrl + C)">
             <span class="border border-white/80 text-[10px] px-1 py-0.2 rounded font-mono font-bold tracking-tight">CC</span>
           </button>
 
-          <!-- Emoji Reactions Button + Google Meet Reactions Bar -->
-          <div class="relative">
-            <button id="btn-reactions" onclick="toggleEmojiPicker(event)" class="w-11 h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-lg transition active:scale-95 shadow-sm" title="Envoyer une réaction">
+          <!-- Emoji Reactions Button + Google Meet Reactions Bar - hidden on mobile, visible on sm -->
+          <div class="relative hidden sm:block">
+            <button id="btn-reactions" onclick="toggleEmojiPicker(event)" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-base sm:text-lg transition active:scale-95 shadow-sm" title="Envoyer une réaction">
               <i class="fa-regular fa-face-smile"></i>
             </button>
             <!-- Google Meet Authentic Reaction Bar Popover -->
@@ -1050,22 +1079,35 @@
           </div>
 
           <!-- Hand Raise Button -->
-          <button id="btn-hand" onclick="toggleHand()" class="w-11 h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-lg transition active:scale-95 shadow-sm" title="Lever la main (Ctrl + H)">
+          <button id="btn-hand" onclick="toggleHand()" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-base sm:text-lg transition active:scale-95 shadow-sm" title="Lever la main (Ctrl + H)">
             <i class="fa-solid fa-hand"></i>
           </button>
 
-          <!-- Screen Share Button -->
-          <button id="btn-screenshare" onclick="toggleScreenShare()" class="w-11 h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-lg transition active:scale-95 shadow-sm" title="Partager votre écran (Ctrl + S)">
+          <!-- Screen Share Button - hidden on mobile, visible from md -->
+          <button id="btn-screenshare" onclick="toggleScreenShare()" class="hidden md:flex w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white items-center justify-center text-base sm:text-lg transition active:scale-95 shadow-sm" title="Partager votre écran (Ctrl + S)">
             <i class="fa-solid fa-arrow-up-from-bracket"></i>
           </button>
 
-          <!-- More Tools / Activities Dropup (Whiteboard, Code, Recording) -->
+          <!-- More Tools / Activities Dropup -->
           <div class="relative">
-            <button id="btn-more-tools" onclick="toggleMoreToolsMenu(event)" class="w-11 h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-base transition active:scale-95 shadow-sm" title="Autres options">
+            <button id="btn-more-tools" onclick="toggleMoreToolsMenu(event)" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#3c4043] hover:bg-[#484c50] text-white flex items-center justify-center text-base transition active:scale-95 shadow-sm" title="Autres options">
               <i class="fa-solid fa-ellipsis-vertical"></i>
             </button>
             <!-- More tools menu -->
-            <div id="more-tools-menu" class="hidden absolute bottom-14 left-1/2 -translate-x-1/2 bg-[#303134] border border-[#5f6368]/40 rounded-2xl py-2 w-60 shadow-2xl z-50 text-xs">
+            <div id="more-tools-menu" class="hidden absolute bottom-14 left-1/2 -translate-x-1/2 bg-[#303134] border border-[#5f6368]/40 rounded-2xl py-2 w-64 shadow-2xl z-50 text-xs max-h-[70vh] overflow-y-auto">
+              <!-- Mobile quick access items -->
+              <button onclick="toggleScreenShare(); closeMoreTools();" class="md:hidden w-full px-4 py-2.5 text-left hover:bg-[#3c4043] text-gray-200 flex items-center gap-3 transition">
+                <i class="fa-solid fa-arrow-up-from-bracket text-[#8ab4f8] text-sm"></i>
+                <span>Partager l'écran</span>
+              </button>
+              <button onclick="toggleClosedCaptions(); closeMoreTools();" class="sm:hidden w-full px-4 py-2.5 text-left hover:bg-[#3c4043] text-gray-200 flex items-center gap-3 transition">
+                <i class="fa-solid fa-closed-captioning text-[#8ab4f8] text-sm"></i>
+                <span>Sous-titres en direct (CC)</span>
+              </button>
+              <button onclick="openInvitationModal(); closeMoreTools();" class="sm:hidden w-full px-4 py-2.5 text-left hover:bg-[#3c4043] text-gray-200 flex items-center gap-3 transition">
+                <i class="fa-solid fa-circle-info text-[#8ab4f8] text-sm"></i>
+                <span>Détails de la réunion</span>
+              </button>
               <button onclick="toggleWhiteboard(); closeMoreTools();" class="w-full px-4 py-2.5 text-left hover:bg-[#3c4043] text-gray-200 flex items-center gap-3 transition">
                 <i class="fa-solid fa-paintbrush text-[#8ab4f8] text-sm"></i>
                 <span>Tableau blanc collaboratif</span>
@@ -1095,13 +1137,35 @@
           </div>
 
           <!-- Leave Call Button (Google Meet Red Oval) -->
-          <button onclick="leaveRoom()" class="h-11 px-6 rounded-full bg-[#ea4335] hover:bg-[#d93025] text-white flex items-center justify-center text-lg transition shadow-md active:scale-95 ml-1" title="Quitter l'appel">
+          <button onclick="leaveRoom()" class="h-10 sm:h-11 px-4 sm:px-6 rounded-full bg-[#ea4335] hover:bg-[#d93025] text-white flex items-center justify-center text-base sm:text-lg transition shadow-md active:scale-95 ml-0.5 sm:ml-1" title="Quitter l'appel">
             <i class="fa-solid fa-phone-slash"></i>
           </button>
         </div>
 
         <!-- RIGHT: Information, Participants, Chat, Host Controls -->
-        <div class="flex items-center gap-2 justify-end w-64">
+        <div class="flex items-center gap-1 sm:gap-2 justify-end w-auto lg:w-64">
+          <!-- Meeting Information Pill (hidden on mobile, visible on sm) -->
+          <button onclick="openInvitationModal()" class="hidden sm:flex w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-[#3c4043] text-gray-300 hover:text-white items-center justify-center text-sm sm:text-base transition" title="Détails de la réunion">
+            <i class="fa-solid fa-circle-info"></i>
+          </button>
+
+          <!-- Participants Button -->
+          <button onclick="toggleParticipants()" class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-[#3c4043] text-gray-300 hover:text-white flex items-center justify-center text-sm sm:text-base transition" title="Afficher tous les participants">
+            <i class="fa-solid fa-user-group"></i>
+            <span id="participants-count-badge" class="absolute -top-1 -right-1 bg-[#1a73e8] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full min-w-[18px] text-center">1</span>
+          </button>
+
+          <!-- Chat Button -->
+          <button onclick="toggleChat()" class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-[#3c4043] text-gray-300 hover:text-white flex items-center justify-center text-sm sm:text-base transition" title="Discuter avec les participants">
+            <i class="fa-regular fa-message"></i>
+            <span id="chat-unread-dot" class="hidden absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#1a73e8] animate-ping"></span>
+          </button>
+
+          <!-- Host Controls Button -->
+          <button id="btn-host-controls" onclick="toggleHostControls()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-[#3c4043] text-gray-300 hover:text-white flex items-center justify-center text-sm sm:text-base transition" title="Commandes de l'organisateur">
+            <i class="fa-solid fa-shield-halved"></i>
+          </button>
+        </div>
           <!-- Meeting Information Pill -->
           <button onclick="openInvitationModal()" class="w-10 h-10 rounded-full hover:bg-[#3c4043] text-gray-300 hover:text-white flex items-center justify-center text-base transition" title="Détails de la réunion">
             <i class="fa-solid fa-circle-info"></i>
@@ -2560,7 +2624,7 @@
       if (!card) {
         card = document.createElement('div');
         card.id = `peer-card-${socketId}`;
-        card.className = "relative bg-[#3c4043] rounded-2xl overflow-hidden border border-white/[0.08] shadow-lg flex items-center justify-center w-full h-full min-h-[220px] transition-all duration-200 group";
+        card.className = "relative bg-[#3c4043] rounded-xl sm:rounded-2xl overflow-hidden border border-white/[0.08] shadow-lg flex items-center justify-center w-full h-full min-h-0 min-w-0 transition-all duration-200 group";
         card.innerHTML = `
           <video id="peer-vid-${socketId}" autoplay playsinline class="w-full h-full object-cover"></video>
           <div id="peer-avatar-${socketId}" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#1a73e8] text-white text-3xl sm:text-4xl font-medium flex items-center justify-center shadow-md">
@@ -2610,20 +2674,24 @@
       if (c2) c2.textContent = count;
       if (c3) c3.textContent = count;
 
-      grid.className = "w-full h-full max-h-full grid gap-3 sm:gap-4 items-center justify-center transition-all duration-200";
+      grid.className = "w-full h-full max-h-full grid gap-2 sm:gap-4 items-center justify-center transition-all duration-200 min-h-0 min-w-0";
 
       if (count === 1) {
-        grid.classList.add("grid-cols-1", "max-w-4xl", "mx-auto");
+        grid.classList.add("grid-cols-1", "max-w-5xl", "mx-auto");
       } else if (count === 2) {
         if (isPortrait) {
-          grid.classList.add("grid-cols-1", "grid-rows-2");
+          grid.classList.add("grid-cols-1", "grid-rows-2", "max-w-md", "mx-auto");
         } else {
-          grid.classList.add("grid-cols-2");
+          grid.classList.add("grid-cols-2", "grid-rows-1", "max-w-6xl", "mx-auto");
         }
       } else if (count <= 4) {
-        grid.classList.add("grid-cols-2", "grid-rows-2");
+        grid.classList.add("grid-cols-2", "grid-rows-2", "max-w-6xl", "mx-auto");
       } else if (count <= 6) {
-        grid.classList.add("grid-cols-2", "sm:grid-cols-3");
+        if (isPortrait) {
+          grid.classList.add("grid-cols-2", "grid-rows-3");
+        } else {
+          grid.classList.add("grid-cols-3", "grid-rows-2", "max-w-7xl", "mx-auto");
+        }
       } else {
         grid.classList.add("grid-cols-2", "sm:grid-cols-3", "lg:grid-cols-4");
       }
