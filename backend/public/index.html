@@ -420,6 +420,17 @@
       transform: scale(1.08);
       transition: filter 0.3s ease;
     }
+
+    /* Ultra-Fluid Video GPU Rendering & Responsive Layout */
+    video {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    #video-grid > div {
+      contain: layout style paint;
+      will-change: transform;
+    }
   </style>
 </head>
 <body class="selection:bg-blue-600 selection:text-white">
@@ -1869,6 +1880,78 @@
     let microphoneNode = null;
     let audioMeterAnimId = null;
 
+    // ==========================================
+    // 🎙️ ZERO-ECHO CONFERENCING AUDIO ENGINE
+    // ==========================================
+    const CONFERENCING_AUDIO_CONSTRAINTS = {
+      echoCancellation: { ideal: true },
+      noiseSuppression: { ideal: true },
+      autoGainControl: { ideal: true },
+      googEchoCancellation: { ideal: true },
+      googAutoGainControl: { ideal: true },
+      googNoiseSuppression: { ideal: true },
+      googHighpassFilter: { ideal: true },
+      googTypingNoiseDetection: { ideal: true },
+      channelCount: { ideal: 1 },
+      sampleRate: { ideal: 48000 }
+    };
+
+    const FALLBACK_AUDIO_CONSTRAINTS = {
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true,
+      channelCount: 1
+    };
+
+    // Strictly ensure all local video elements are fully muted with volume 0 to prevent acoustic feedback loops
+    function attachLocalStreamToVideo(el, stream) {
+      if (!el) return;
+      el.srcObject = stream;
+      el.muted = true;
+      el.defaultMuted = true;
+      el.volume = 0;
+    }
+
+    // Rewrite SDP Opus codec to enforce mono voice profile with FEC (Forward Error Correction)
+    // Disables stereo leakage so hardware/software AEC3 works at 100% capacity with zero echo
+    function optimizeSdpForConferencing(sdp) {
+      if (!sdp) return sdp;
+      let lines = sdp.split('\r\n');
+      let opusPt = null;
+
+      for (let i = 0; i < lines.length; i++) {
+        const match = lines[i].match(/^a=rtpmap:(\d+)\s+opus\/48000/i);
+        if (match) {
+          opusPt = match[1];
+          break;
+        }
+      }
+
+      if (opusPt) {
+        let fmtpFound = false;
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].startsWith(`a=fmtp:${opusPt} `)) {
+            fmtpFound = true;
+            let params = lines[i].substring(`a=fmtp:${opusPt} `.length);
+            if (!params.includes('stereo=')) params += ';stereo=0';
+            else params = params.replace(/stereo=1/g, 'stereo=0');
+            if (!params.includes('sprop-stereo=')) params += ';sprop-stereo=0';
+            else params = params.replace(/sprop-stereo=1/g, 'sprop-stereo=0');
+            if (!params.includes('useinbandfec=')) params += ';useinbandfec=1';
+            lines[i] = `a=fmtp:${opusPt} ${params}`;
+            break;
+          }
+        }
+        if (!fmtpFound) {
+          const rtpIndex = lines.findIndex(l => l.startsWith(`a=rtpmap:${opusPt} `));
+          if (rtpIndex !== -1) {
+            lines.splice(rtpIndex + 1, 0, `a=fmtp:${opusPt} minptime=10;useinbandfec=1;stereo=0;sprop-stereo=0`);
+          }
+        }
+      }
+      return lines.join('\r\n');
+    }
+
     const API_BASE = '/api';
 
     // Acoustic sound effects generator (No audio files needed!)
@@ -2155,8 +2238,10 @@
             await pc.setRemoteDescription(new RTCSessionDescription(offer));
             drainCandidateQueue(callerSocketId, pc);
             const answer = await pc.createAnswer();
-            await pc.setLocalDescription(answer);
-            socket.emit('signal-answer', { targetSocketId: callerSocketId, answer });
+            const cleanSdp = optimizeSdpForConferencing(answer.sdp);
+            const finalAnswer = { type: answer.type, sdp: cleanSdp };
+            await pc.setLocalDescription(finalAnswer);
+            socket.emit('signal-answer', { targetSocketId: callerSocketId, answer: finalAnswer });
           } catch (e) {
             console.warn('Signal offer handling error:', e.message);
           }
@@ -2383,12 +2468,15 @@
       try {
         localStream = await navigator.mediaDevices.getUserMedia({
           video: { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
-          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+          audio: CONFERENCING_AUDIO_CONSTRAINTS
         });
       } catch (err1) {
         console.warn('HD camera failed, trying basic media constraints...', err1.message);
         try {
-          localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          localStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: FALLBACK_AUDIO_CONSTRAINTS
+          });
         } catch (err2) {
           console.warn('Hardware camera/mic not available or denied. Using synthetic virtual stream.', err2.message);
           localStream = createSyntheticMediaStream(chosenName);
@@ -2397,7 +2485,7 @@
       }
 
       const grVideo = document.getElementById('greenroom-video');
-      if (grVideo && localStream) grVideo.srcObject = localStream;
+      attachLocalStreamToVideo(grVideo, localStream);
       setupAudioDSP(localStream);
     }
 
@@ -2449,6 +2537,14 @@
       try {
         if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
         if (audioContext.state === 'suspended') audioContext.resume();
+
+        if (audioMeterAnimId) {
+          cancelAnimationFrame(audioMeterAnimId);
+          audioMeterAnimId = null;
+        }
+        if (microphoneNode) {
+          try { microphoneNode.disconnect(); } catch (e) {}
+        }
 
         microphoneNode = audioContext.createMediaStreamSource(stream);
 
@@ -2563,8 +2659,11 @@
     async function changeAudioDevice(deviceId) {
       if (!deviceId) return;
       try {
+        const audioConstraints = Object.assign({}, CONFERENCING_AUDIO_CONSTRAINTS, {
+          deviceId: { exact: deviceId }
+        });
         const newStream = await navigator.mediaDevices.getUserMedia({
-          audio: { deviceId: { exact: deviceId } }
+          audio: audioConstraints
         });
         const newAudioTrack = newStream.getAudioTracks()[0];
         if (localStream) {
@@ -2579,6 +2678,7 @@
           const sender = pc.getSenders().find(s => s.track && s.track.kind === 'audio');
           if (sender) sender.replaceTrack(newAudioTrack);
         });
+        setupAudioDSP(localStream);
         showToast('Périphérique audio synchronisé', 'info');
       } catch (e) {
         console.warn('Change audio device error:', e.message);
@@ -2589,7 +2689,7 @@
       if (!deviceId) return;
       try {
         const newStream = await navigator.mediaDevices.getUserMedia({
-          video: { deviceId: { exact: deviceId }, width: { ideal: 1920 }, height: { ideal: 1080 } }
+          video: { deviceId: { exact: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } }
         });
         const newVideoTrack = newStream.getVideoTracks()[0];
         if (localStream) {
@@ -2602,8 +2702,8 @@
         }
         const v1 = document.getElementById('greenroom-video');
         const v2 = document.getElementById('local-video');
-        if (v1) v1.srcObject = localStream;
-        if (v2) v2.srcObject = localStream;
+        attachLocalStreamToVideo(v1, localStream);
+        attachLocalStreamToVideo(v2, localStream);
 
         activePeers.forEach(pc => {
           const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
@@ -2632,7 +2732,7 @@
       lastRoomJoined = currentRoomCode;
 
       const localVid = document.getElementById('local-video');
-      if (localVid && localStream) localVid.srcObject = localStream;
+      attachLocalStreamToVideo(localVid, localStream);
 
       playAcousticChime('join');
       switchView('room');
@@ -2714,10 +2814,12 @@
         async function makeOffer() {
           try {
             const offer = await pc.createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: true });
-            await pc.setLocalDescription(offer);
+            const cleanSdp = optimizeSdpForConferencing(offer.sdp);
+            const finalOffer = { type: offer.type, sdp: cleanSdp };
+            await pc.setLocalDescription(finalOffer);
             socket.emit('signal-offer', {
               targetSocketId: remoteSocketId,
-              offer,
+              offer: finalOffer,
               callerData: { userId: currentUser ? currentUser.id : socket.id, userName: currentUser ? currentUser.name : 'Participant' }
             });
           } catch (e) {
@@ -2810,6 +2912,9 @@
         const avatar = document.getElementById(`peer-avatar-${socketId}`);
         if (vid) {
           vid.srcObject = stream;
+          vid.muted = false;
+          vid.volume = 1.0;
+          vid.play().catch(e => console.warn('Peer video playback autoplay:', e));
           if (avatar) avatar.classList.add('hidden');
         }
         if (stream.getAudioTracks().length > 0) {
@@ -3327,11 +3432,14 @@
       try {
         localStream = await navigator.mediaDevices.getUserMedia({
           video: { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
-          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+          audio: CONFERENCING_AUDIO_CONSTRAINTS
         });
       } catch (err1) {
         try {
-          localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+          localStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: FALLBACK_AUDIO_CONSTRAINTS
+          });
         } catch (err2) {
           console.warn('Media hardware unavailable, synthetic stream fallback', err2.message);
           localStream = createSyntheticMediaStream(chosenName);
@@ -3339,7 +3447,7 @@
       }
 
       const localVid = document.getElementById('local-video');
-      if (localVid && localStream) localVid.srcObject = localStream;
+      attachLocalStreamToVideo(localVid, localStream);
       setupAudioDSP(localStream);
       populateMediaDevices();
 
@@ -3758,7 +3866,7 @@
           audio: true
         });
         const videoTrack = screenStream.getVideoTracks()[0];
-        document.getElementById('local-video').srcObject = screenStream;
+        attachLocalStreamToVideo(document.getElementById('local-video'), screenStream);
         if (btn) {
           btn.classList.add('bg-[#8ab4f8]', 'text-[#202124]');
           btn.classList.remove('bg-[#3c4043]', 'text-white');
@@ -3770,7 +3878,7 @@
         });
 
         videoTrack.onended = () => {
-          document.getElementById('local-video').srcObject = localStream;
+          attachLocalStreamToVideo(document.getElementById('local-video'), localStream);
           if (btn) {
             btn.classList.remove('bg-[#8ab4f8]', 'text-[#202124]');
             btn.classList.add('bg-[#3c4043]', 'text-white');
@@ -4225,7 +4333,7 @@
       const prevVid = document.getElementById('settings-preview-video');
       const prevAvatar = document.getElementById('settings-preview-avatar');
       if (prevVid && localStream) {
-        prevVid.srcObject = localStream;
+        attachLocalStreamToVideo(prevVid, localStream);
         prevVid.classList.remove('hidden');
         if (prevAvatar) prevAvatar.classList.add('hidden');
       } else if (prevAvatar) {
